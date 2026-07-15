@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python3 -c \"import sys,json;[print\\(p['url'],p['title'][:30]\\) for p in json.load\\(sys.stdin\\)]\")"
+      "Bash(python3 -c \"import sys,json;[print\\(p['url'],p['title'][:30]\\) for p in json.load\\(sys.stdin\\)]\")",
+      "Bash(sed -i \"s/window.__qaJumpPhase\\(0\\)\\); }\\); }/window.__qaJumpPhase\\(0\\)\\); }\\);/\" qa_pills_reset.js)",
+      "Bash(sed -i \"s/await page.evaluate\\(\\(\\) => { advancePhase\\(\\); }\\);/await page.evaluate\\(\\(\\) => window.__qaAdvancePhase\\(\\)\\);/\" qa_pills_reset.js)"
     ]
   }
 }

@@ -2,13 +2,20 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>el cuarto</title>
+<title>Panopticon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap">
 </head>
 <body style="margin:0;">
 <div id="app-root"></div>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-  :root{ --void:#050506; --fg:#8f8f96; --fg-dim:#4a4a50; --accent:#c9c9cf; --font-pixel:'Press Start 2P','SF Mono',monospace; }
+  :root{
+    --void:#050506; --fg:#8f8f96; --fg-dim:#4a4a50; --accent:#c9c9cf;
+    --font-pixel:'Press Start 2P','SF Mono',monospace;
+    --font-crt:'DotGothic16','Press Start 2P',monospace;
+    --purple-strong:#b026ff;
+  }
   *{box-sizing:border-box; margin:0; padding:0;}
   #app-root{
     background:var(--void); color:var(--fg);
@@ -22,19 +29,28 @@
   }
   .hud b{ color:var(--accent); }
   #startOverlay{
-    position:absolute; inset:0; background:rgba(5,5,6,0.94);
+    position:absolute; inset:0; background:rgba(5,5,6,0.62); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     text-align:center; padding:20px; z-index:50;
   }
-  #startOverlay h1{ font-size:13px; color:var(--accent); font-weight:500; margin-bottom:16px; letter-spacing:.03em; }
-  #startOverlay p{ font-size:9px; color:var(--fg-dim); max-width:460px; line-height:2.1; margin-bottom:18px; }
-  #startOverlay .warning{ color:#a08a8a; border:1px solid #3a2a2a; padding:12px 14px; margin-bottom:22px; max-width:460px; }
+  #startOverlay h1{
+    font-family:var(--font-crt); font-size:52px; color:var(--purple-strong); font-weight:400;
+    margin-bottom:32px; letter-spacing:.1em; text-align:center;
+    -webkit-text-stroke:1.5px var(--purple-strong);
+    text-shadow:0 0 16px rgba(176,38,255,.9), 0 0 34px rgba(176,38,255,.6), 0 0 60px rgba(176,38,255,.35);
+  }
+  #startOverlay p{ font-size:9px; color:var(--fg-dim); max-width:620px; line-height:2.1; margin-bottom:18px; }
+  #startOverlay .warning{
+    color:#c9b8b8; border:2px solid #5a2a2a; background:rgba(60,20,20,0.18);
+    padding:16px 20px; margin-bottom:22px; max-width:620px; line-height:2;
+  }
+  #startOverlay .warning b{ color:#e0a0a0; }
   #startOverlay button{
     background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e;
     padding:12px 20px; font-family:inherit; font-size:10px; cursor:pointer; letter-spacing:.02em;
   }
   #startOverlay button:hover{ color:var(--accent); border-color:#3a3a3e; }
-  .controls-hint{ font-size:8px; color:var(--fg-dim); margin-top:16px; letter-spacing:.02em; line-height:2; }
+  .controls-hint{ font-size:8px; color:#3ddc61; margin-top:16px; letter-spacing:.02em; line-height:2; }
 
   #interactPrompt{
     position:absolute; bottom:14%; left:50%; transform:translateX(-50%);
@@ -51,28 +67,37 @@
   }
   .monologue.show{ opacity:0.9; }
 
+  #timeSkipCaption{
+    position:absolute; top:22%; left:50%; transform:translateX(-50%);
+    font-family:var(--font-crt); font-size:22px; color:var(--purple-strong); letter-spacing:.08em;
+    text-shadow:0 0 14px rgba(176,38,255,.8), 0 0 28px rgba(176,38,255,.5);
+    opacity:0; transition:opacity 1.1s ease; z-index:7; pointer-events:none; text-align:center;
+  }
+  #timeSkipCaption.show{ opacity:1; }
+
   #fadeLayer{
     position:absolute; inset:0; background:#000; opacity:0; pointer-events:none; z-index:20;
     transition:opacity 1.1s ease;
   }
   #sceneCanvas{ transition:filter 0.22s ease; }
   #sceneCanvas.blurred{ filter:blur(7px) brightness(0.7); }
+  #sceneCanvas.blurred-soft{ filter:blur(2.5px) brightness(0.92); }
   #fadeLayer.white{ background:#e8e8ea; }
   #fadeLayer.show{ opacity:1; }
 
   /* ---------- panels de elección ---------- */
-  #bathroomPanel, #baneraPanel, #windowPanel{
+  #bathroomPanel, #baneraPanel, #windowPanel, #notePanel{
     position:absolute; inset:0; display:none; align-items:center; justify-content:center;
     background:rgba(5,5,6,0.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
     z-index:30; flex-direction:column; gap:10px;
   }
-  #bathroomPanel.open, #baneraPanel.open, #windowPanel.open{ display:flex; }
-  #bathroomPanel button, #baneraPanel button, #windowPanel button{
+  #bathroomPanel.open, #baneraPanel.open, #windowPanel.open, #notePanel.open{ display:flex; }
+  #bathroomPanel button, #baneraPanel button, #windowPanel button, #notePanel button{
     background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e;
-    padding:12px 16px; font-family:inherit; font-size:9px; cursor:pointer; width:310px; line-height:1.6;
+    padding:16px 20px; font-family:inherit; font-size:13px; cursor:pointer; width:380px; line-height:1.8;
   }
-  #bathroomPanel button:hover, #baneraPanel button:hover, #windowPanel button:hover{ color:var(--accent); border-color:#3a3a3e; }
-  #bathroomPanel p, #baneraPanel p, #windowPanel p{ font-size:9px; color:var(--fg-dim); margin-bottom:8px; max-width:340px; text-align:center; line-height:1.8; }
+  #bathroomPanel button:hover, #baneraPanel button:hover, #windowPanel button:hover, #notePanel button:hover{ color:var(--accent); border-color:#3a3a3e; }
+  #bathroomPanel p, #baneraPanel p, #windowPanel p, #notePanel p{ font-size:12px; color:var(--fg-dim); margin-bottom:10px; max-width:440px; text-align:center; line-height:2; }
 
   /* ---------- secuencia de memoria al dormir (novela visual) ---------- */
   #bedFade{
@@ -106,6 +131,30 @@
   .credits-divider{ width:120px; height:2px; background:#3a3a3e; margin:30px auto; }
   .credits-event{ font-size:11px; letter-spacing:.06em; color:#c9c9cf; line-height:2.2; text-transform:uppercase; }
 
+  /* ---------- pantalla final compartida (los 3 finales): gracias por jugar + título + créditos + reiniciar ---------- */
+  #endScreen{
+    position:absolute; inset:0; background:#000; z-index:65; display:none;
+    align-items:center; justify-content:center; flex-direction:column; gap:26px;
+    opacity:0; transition:opacity 1.6s ease; overflow-y:auto; padding:40px 20px;
+  }
+  #endScreen.show{ display:flex; opacity:1; }
+  .end-thanks{
+    font-family:var(--font-pixel); font-size:12px; color:#c9c9cf; letter-spacing:.2em; text-transform:uppercase;
+  }
+  .end-title{
+    font-family:var(--font-crt); font-size:48px; color:var(--purple-strong); letter-spacing:.1em;
+    -webkit-text-stroke:1.5px var(--purple-strong);
+    text-shadow:0 0 18px rgba(176,38,255,.9), 0 0 36px rgba(176,38,255,.6), 0 0 60px rgba(176,38,255,.35);
+  }
+  .end-credits{ text-align:center; }
+  .end-credits .credits-role{ margin-bottom:22px; }
+  #btnRestart{
+    font-family:var(--font-pixel); font-size:11px; background:#1c1c1f; color:#eee;
+    border:2px solid var(--purple-strong); padding:14px 26px; cursor:pointer;
+    box-shadow:0 0 14px rgba(176,38,255,.4);
+  }
+  #btnRestart:hover{ background:#2a1030; box-shadow:0 0 20px rgba(176,38,255,.7); }
+
   /* ---------- webcam reflection (fase disolución) ---------- */
   #reflection{
     position:absolute; bottom:24px; right:24px; width:150px; height:112px;
@@ -117,6 +166,10 @@
     width:100%; height:100%; object-fit:cover; transform:scaleX(-1);
     filter: contrast(1.3) saturate(0.4) hue-rotate(0deg);
     animation: glitchShift 0.6s infinite steps(2);
+  }
+  /* si vas camino al final bueno (Salida), el reflejo se ve tranquilo/normal en vez de glitcheado */
+  #reflection.calm video{
+    animation: none; filter: contrast(1.02) saturate(0.95); transform: scaleX(-1);
   }
   @keyframes glitchShift{
     0%{ filter:contrast(1.3) saturate(0.4) hue-rotate(0deg) brightness(1); transform:scaleX(-1) translateX(0); }
@@ -186,88 +239,88 @@
   #pcContent::-webkit-scrollbar-thumb{ background:#3ddc61; border:3px solid #000; }
 
   /* twt — reskin oscuro estilo X/Twitter */
-  .twt-app{ max-width:440px; margin:0 auto; }
+  .twt-app{ max-width:560px; margin:0 auto; }
   .twt-compose{ display:flex; gap:10px; padding:4px 4px 14px; border-bottom:1px solid #2f3336; }
   .twt-avatar{ width:38px; height:38px; border-radius:50%; background:#3a3a3e; flex-shrink:0; }
   .twt-avatar.sm{ width:34px; height:34px; }
   .twt-compose-body{ flex:1; min-width:0; }
   .twt-compose textarea{
     width:100%; background:transparent; color:#e7e9ea; border:none; outline:none;
-    font-family:inherit; font-size:9px; resize:none; line-height:1.9; padding:6px 0;
+    font-family:inherit; font-size:13px; resize:none; line-height:2; padding:6px 0;
   }
   .twt-compose-footer{ display:flex; justify-content:flex-end; align-items:center; gap:10px; }
-  .twt-charcount{ font-size:7px; color:#71767b; }
+  .twt-charcount{ font-size:11px; color:#71767b; }
   .twt-postbtn{
     background:#1d9bf0; color:#fff; border:none; border-radius:4px;
-    padding:8px 14px; font-family:inherit; font-size:8px; cursor:pointer;
+    padding:10px 16px; font-family:inherit; font-size:12px; cursor:pointer;
   }
   .twt-postbtn:hover{ background:#1a8cd8; }
   .twt-feed{ margin-top:2px; }
-  .twt-post{ display:flex; gap:10px; padding:12px 4px; border-bottom:1px solid #2f3336; }
+  .twt-post{ display:flex; gap:10px; padding:14px 4px; border-bottom:1px solid #2f3336; }
   .twt-post-body{ flex:1; min-width:0; }
-  .twt-post-head{ display:flex; gap:6px; align-items:baseline; font-size:8px; flex-wrap:wrap; row-gap:4px; }
+  .twt-post-head{ display:flex; gap:6px; align-items:baseline; font-size:12px; flex-wrap:wrap; row-gap:4px; }
   .twt-name{ color:#e7e9ea; }
   .twt-post.critic .twt-name{ color:#a08a8a; }
-  .twt-handle, .twt-time{ color:#71767b; font-size:7px; }
-  .twt-text{ color:#e7e9ea; font-size:9px; line-height:1.9; margin-top:6px; white-space:pre-wrap; word-break:break-word; }
-  .twt-actions{ display:flex; gap:28px; margin-top:10px; color:#71767b; font-size:8px; }
+  .twt-handle, .twt-time{ color:#71767b; font-size:11px; }
+  .twt-text{ color:#e7e9ea; font-size:13px; line-height:2; margin-top:6px; white-space:pre-wrap; word-break:break-word; }
+  .twt-actions{ display:flex; gap:28px; margin-top:10px; color:#71767b; font-size:11px; }
   .twt-actions span{ display:flex; align-items:center; gap:5px; }
-  .twt-actions svg{ width:14px; height:14px; fill:currentColor; }
-  .twt-empty{ text-align:center; color:#71767b; font-size:9px; padding:30px 0; line-height:1.8; }
+  .twt-actions svg{ width:16px; height:16px; fill:currentColor; }
+  .twt-empty{ text-align:center; color:#71767b; font-size:12px; padding:30px 0; line-height:1.8; }
 
   /* foro — reskin oscuro estilo imageboard (2chan/4chan) */
-  .foro-board{ max-width:640px; margin:0 auto; }
+  .foro-board{ max-width:720px; margin:0 auto; }
   .foro-thread-card{
-    border:1px solid #222225; background:#0e0e10; margin-bottom:10px; padding:12px 14px; cursor:pointer;
+    border:1px solid #222225; background:#0e0e10; margin-bottom:10px; padding:14px 16px; cursor:pointer;
   }
   .foro-thread-card:hover{ border-color:#3a3a3e; }
-  .foro-thread-card .fh{ font-size:7px; color:#5a8a3a; margin-bottom:8px; line-height:1.6; }
-  .foro-thread-card .ft{ font-size:9px; color:var(--accent); margin-bottom:8px; line-height:1.6; }
-  .foro-thread-card .fp{ font-size:8px; color:var(--fg-dim); line-height:1.8; }
-  .foro-thread-card .freplies{ font-size:7px; color:#5a5a60; margin-top:8px; }
-  .foro-post{ border:1px solid #222225; background:#0e0e10; padding:12px 14px; margin-bottom:8px; font-size:8px; }
+  .foro-thread-card .fh{ font-size:11px; color:#5a8a3a; margin-bottom:10px; line-height:1.6; }
+  .foro-thread-card .ft{ font-size:13px; color:var(--accent); margin-bottom:10px; line-height:1.6; }
+  .foro-thread-card .fp{ font-size:12px; color:var(--fg-dim); line-height:1.9; }
+  .foro-thread-card .freplies{ font-size:11px; color:#5a5a60; margin-top:10px; }
+  .foro-post{ border:1px solid #222225; background:#0e0e10; padding:14px 16px; margin-bottom:8px; font-size:12px; }
   .foro-post.op{ border-color:#3a3a3e; }
-  .foro-post .fhead{ font-size:7px; color:#71767b; margin-bottom:8px; line-height:1.6; }
+  .foro-post .fhead{ font-size:11px; color:#71767b; margin-bottom:10px; line-height:1.6; }
   .foro-post .fhead b{ color:#8ba86a; }
   .foro-post .fno{ color:#5a5a60; }
-  .foro-body-text{ line-height:2; font-size:8px; }
+  .foro-body-text{ line-height:2.1; font-size:12px; }
   .fquote{ color:#7a92c4; }
   .greentext{ color:#8fbf5f; }
   .foro-replies{ margin-top:10px; padding-left:14px; border-left:1px solid #222225; }
   .foro-back{
-    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:8px 14px;
-    font-family:inherit; font-size:7px; cursor:pointer; margin-bottom:12px;
+    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:10px 16px;
+    font-family:inherit; font-size:11px; cursor:pointer; margin-bottom:12px;
   }
   .foro-comment-box{ margin-top:14px; }
   .foro-comment-box textarea{
     width:100%; background:#111113; color:var(--fg); border:1px solid #2a2a2e;
-    font-family:inherit; font-size:8px; line-height:1.8; padding:10px; resize:none;
+    font-family:inherit; font-size:12px; line-height:1.9; padding:10px; resize:none;
   }
   .foro-comment-box button{
     margin-top:8px; background:#1c1c1f; color:#a08a8a; border:1px solid #3a2a2a;
-    padding:8px 14px; font-family:inherit; font-size:7px; cursor:pointer;
+    padding:10px 16px; font-family:inherit; font-size:11px; cursor:pointer;
   }
 
   /* rpg */
-  .rpg-box{ max-width:460px; margin:0 auto; text-align:center; }
+  .rpg-box{ max-width:560px; margin:0 auto; text-align:center; }
   #rpgCanvas{ display:block; margin:0 auto; background:#111013; border:1px solid #2a2a2e; }
-  .rpg-hint{ font-size:7px; color:var(--fg-dim); margin:12px 0 14px; line-height:1.8; }
+  .rpg-hint{ font-size:11px; color:var(--fg-dim); margin:12px 0 14px; line-height:1.8; }
   .rpg-dialogue{
-    border:1px solid #2a2a2e; padding:16px; font-size:9px; line-height:1.9; min-height:60px; margin-bottom:14px;
+    border:1px solid #2a2a2e; padding:16px; font-size:13px; line-height:2; min-height:60px; margin-bottom:14px;
   }
   .rpg-box button{
-    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:9px 14px;
-    font-family:inherit; font-size:7px; cursor:pointer; margin:4px; line-height:1.6;
+    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:11px 16px;
+    font-family:inherit; font-size:11px; cursor:pointer; margin:4px; line-height:1.6;
   }
   .rpg-choices{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
 
   /* plataformas */
   #platCanvas{ display:block; margin:0 auto; background:#0c0c0e; border:1px solid #2a2a2e; }
-  .plat-hint{ text-align:center; font-size:7px; color:var(--fg-dim); margin-top:12px; line-height:1.8; }
+  .plat-hint{ text-align:center; font-size:11px; color:var(--fg-dim); margin-top:12px; line-height:1.8; }
   .plat-hint span{ color:var(--accent); }
   #platRetry{
     background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e;
-    padding:8px 14px; font-family:inherit; font-size:8px; cursor:pointer;
+    padding:10px 16px; font-family:inherit; font-size:12px; cursor:pointer;
   }
   #platRetry:hover{ color:var(--accent); border-color:#3a3a3e; }
 
@@ -304,6 +357,7 @@
     <div class="hud">fase: <b id="phaseLabel">día 1</b></div>
     <div id="interactPrompt"></div>
     <div class="monologue" id="monologue"></div>
+    <div id="timeSkipCaption"></div>
     <div id="fadeLayer"></div>
     <div id="bedFade"></div>
     <div id="bedDialogueBox">
@@ -325,6 +379,21 @@
       </div>
     </div>
 
+    <div id="endScreen">
+      <div class="end-thanks">Gracias por jugar</div>
+      <div class="end-title">Panopticon</div>
+      <div class="end-credits">
+        <div class="credits-label">Desarrollado y producido por</div>
+        <div class="credits-name">Ileana Tapia Castillo</div>
+        <div class="credits-role">Dirección Artística y Programación</div>
+        <div class="credits-name">Víctor Manuel Cachola Cervantes</div>
+        <div class="credits-role">Composición Musical y Masterización</div>
+        <div class="credits-divider"></div>
+        <div class="credits-event">Primera Bienal Mexiquense 2026</div>
+      </div>
+      <button id="btnRestart">reiniciar</button>
+    </div>
+
     <div id="bathroomPanel">
       <p>&gt; lavamanos</p>
       <button id="btnBrush">cepillarte los dientes</button>
@@ -344,6 +413,12 @@
       <p>&gt; la ventana</p>
       <button id="btnBreakWindow">romperla</button>
       <button id="btnWinClose">alejarte</button>
+    </div>
+
+    <div id="notePanel">
+      <p>&gt; una nota bajo la puerta</p>
+      <p id="noteText" style="font-style:italic; color:var(--accent); max-width:440px;"></p>
+      <button id="btnNoteSave">guardar</button>
     </div>
 
     <div id="pcOverlay">
@@ -379,9 +454,9 @@
     </div>
 
     <div id="startOverlay">
-      <h1>&gt; el cuarto</h1>
+      <h1>Panopticon</h1>
       <p>Cama, escritorio, monitor, puerta. Cruzar la puerta no te saca de aquí — te regresa al mismo cuarto, un poco menos sólido que antes. WASD para caminar, mouse para mirar, E para interactuar.</p>
-      <div class="warning">Esta obra aborda temas de aislamiento, salud mental y pensamientos suicidas de forma simbólica y no explícita. Si estás pasando por algo similar, no estás solo/a — Línea de la Vida: 800 911 2000. Más adelante en la experiencia se solicitará acceso a tu cámara.</div>
+      <div class="warning">Esta obra aborda temas de aislamiento, salud mental y pensamientos suicidas de forma simbólica y no explícita. Si estás pasando por algo similar, no estás solo/a — Línea de la Vida: <b>800 911 2000</b>. Más adelante en la experiencia se solicitará acceso a tu cámara.</div>
       <button id="enterBtn">▶ entrar</button>
       <div class="controls-hint">WASD mover · mouse mirar · E interactuar · ESC soltar cursor</div>
     </div>
@@ -711,6 +786,11 @@
 
   const door = box(1.8, 2.0, 0.12, doorMat, 0, 1.0, ROOM.d/2 - 0.02);
 
+  // nota bajo la puerta — de mamá, cambia cada fase
+  const doorNoteMat = new THREE.MeshStandardMaterial({ color:0xe8e2d0, roughness:1, flatShading:true });
+  const doorNoteMesh = box(0.20, 0.006, 0.26, doorNoteMat, 0, 0.063, 2.05);
+  doorNoteMesh.rotation.y = 0.18;
+
   // cama más larga
   const cobijaMat = new THREE.MeshStandardMaterial({ color:0x22222a, roughness:1, flatShading:true });
   box(1.65, 0.35, 1.55, furnMat, 1.5, 0.175, -1.72);         // colchón
@@ -778,6 +858,13 @@
   // interior pared izq x=-2.45; interior pared trasera z=-2.45
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x181818, roughness: 1, flatShading: true });
   const photoMat = new THREE.MeshStandardMaterial({ color: 0x0c0c11, roughness: 0.8, emissive: 0x090910, emissiveIntensity: 0.4, flatShading: true });
+  // reconocimiento — diploma/certificado colgado en la pared izquierda, cerca del escritorio
+  const certMat = new THREE.MeshStandardMaterial({ color:0xcbb87a, roughness:0.6, emissive:0x2a2010, emissiveIntensity:0.25, flatShading:true });
+  const certSealMat = new THREE.MeshStandardMaterial({ color:0xd4af37, roughness:0.4, metalness:0.3, flatShading:true });
+  box(0.05, 0.28, 0.36, frameMat, -2.42, 1.55, -1.6);
+  box(0.025, 0.22, 0.30, certMat, -2.40, 1.55, -1.6);
+  box(0.015, 0.05, 0.05, certSealMat, -2.385, 1.47, -1.68);
+
   // foto 1 — pared izquierda (vertical)
   box(0.06, 0.42, 0.32, frameMat, -2.42, 1.10, 1.20);
   box(0.03, 0.36, 0.26, photoMat, -2.40, 1.10, 1.20);
@@ -785,8 +872,20 @@
   box(0.06, 0.38, 0.30, frameMat, 1.55, 1.85, -2.42);
   box(0.03, 0.32, 0.24, photoMat, 1.55, 1.85, -2.40);
   // foto 3 — pared trasera, horizontal (junto a ventana, lado izquierdo)
-  box(0.06, 0.26, 0.40, frameMat, -0.65, 1.85, -2.42);
-  box(0.03, 0.20, 0.34, photoMat, -0.65, 1.85, -2.40);
+  // se cae al piso en la fase "año" (ver fallenFrameGroup más abajo)
+  const frame3 = box(0.06, 0.26, 0.40, frameMat, -0.65, 1.85, -2.42);
+  const photo3 = box(0.03, 0.20, 0.34, photoMat, -0.65, 1.85, -2.40);
+
+  const fallenFrameGroup = new THREE.Group();
+  const fallenFrame = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.26, 0.40), frameMat);
+  const fallenPhoto = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.20, 0.34), photoMat);
+  fallenFrame.rotation.set(Math.PI/2, 0.35, 0);
+  fallenPhoto.rotation.copy(fallenFrame.rotation);
+  fallenFrame.position.set(-0.55, 0.03, -2.28);
+  fallenPhoto.position.set(-0.55, 0.045, -2.27);
+  fallenFrameGroup.add(fallenFrame, fallenPhoto);
+  fallenFrameGroup.visible = false;
+  room.add(fallenFrameGroup);
 
   // ventana con cortina
   const windowFrameMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0c, roughness:1, flatShading:true });
@@ -827,6 +926,20 @@
   purpleAccent.position.set(-1.5, 2.2, 0.8);
   scene.add(purpleAccent);
 
+  // Color de la luz ambiental — cambia si tomas pastillas más de una vez seguida (efecto de sobredosis)
+  const ROOM_MOOD_COLORS = {
+    violeta: { ambient: 0x2e1a38, accent: 0x7a1a8a }, // normal
+    azul:    { ambient: 0x1a2a48, accent: 0x1a4aa0 },
+    verde:   { ambient: 0x1a3a20, accent: 0x1a8a3a },
+    rojo:    { ambient: 0x3a1a1a, accent: 0x8a1a1a },
+    amarillo:{ ambient: 0x3a3418, accent: 0x8a7a1a },
+  };
+  function setRoomMoodColor(name){
+    const c = ROOM_MOOD_COLORS[name] || ROOM_MOOD_COLORS.violeta;
+    ambient.color.setHex(c.ambient);
+    purpleAccent.color.setHex(c.accent);
+  }
+
   // Bombillas Edison colgantes
   const bulbMat  = new THREE.MeshStandardMaterial({ color:0xffbb44, emissive:0xffaa33, emissiveIntensity:2.2, roughness:0.3 });
   const cordMat2 = new THREE.MeshStandardMaterial({ color:0x1a1a1a, roughness:1 });
@@ -843,6 +956,63 @@
   box(0.007, 0.48, 0.007, cordMat2, 1.5, ROOM.h-0.24, -1.8);
   box(0.050, 0.08, 0.050, bulbMat, 1.5, ROOM.h-0.52, -1.8);
   const edisL3 = new THREE.PointLight(0xffcc66, 0.40, 2.5); edisL3.position.set(1.5, ROOM.h-0.52, -1.8); scene.add(edisL3);
+
+  // Parpadeo general del cuarto (~10s) — se dispara al tomar pastillas
+  function triggerPillFlicker(durationMs=10000){
+    const lights = [ambient, hemi, edisL1, edisL2, edisL3, purpleAccent, moonLight];
+    const baseIntensities = lights.map(l => l.intensity);
+    const endTime = performance.now() + durationMs;
+    (function tick(){
+      const now = performance.now();
+      if(now >= endTime){
+        lights.forEach((l,i)=> l.intensity = baseIntensities[i]); // restaura al terminar
+        return;
+      }
+      const off = Math.random() < 0.5;
+      lights.forEach((l,i)=> l.intensity = off ? 0 : baseIntensities[i]);
+      setTimeout(tick, 60 + Math.random()*140);
+    })();
+  }
+
+  // Ojos rojos en las paredes — alucinación al despertar en "año"/"disolución" si tomaste pastillas
+  const eyeMat = new THREE.MeshStandardMaterial({ color:0x220000, emissive:0xff1010, emissiveIntensity:2.8, roughness:0.5 });
+  function makeEyePair(x, y, z, rotY){
+    const g = new THREE.Group();
+    const l = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), eyeMat);
+    const r = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), eyeMat);
+    l.position.set(-0.06, 0, 0);
+    r.position.set(0.06, 0, 0);
+    g.add(l, r);
+    g.position.set(x, y, z);
+    g.rotation.y = rotY || 0;
+    return g;
+  }
+  const wallEyesGroup = new THREE.Group();
+  wallEyesGroup.add(makeEyePair(-1.0, 2.05, -2.44, 0));            // pared trasera, izq
+  wallEyesGroup.add(makeEyePair(1.2, 1.9, -2.44, 0));              // pared trasera, der
+  wallEyesGroup.add(makeEyePair(-2.44, 2.1, 1.0, Math.PI/2));      // pared izquierda
+  wallEyesGroup.add(makeEyePair(2.44, 1.85, 0.4, -Math.PI/2));     // pared derecha
+  wallEyesGroup.visible = false;
+  room.add(wallEyesGroup);
+
+  let eyesBlinkActive = false;
+  function triggerWallEyes(durationMs=4000){
+    if(eyesBlinkActive) return;
+    eyesBlinkActive = true;
+    const endTime = performance.now() + durationMs;
+    wallEyesGroup.visible = true;
+    (function tick(){
+      if(performance.now() >= endTime){
+        wallEyesGroup.visible = false;
+        eyesBlinkActive = false;
+        return;
+      }
+      setTimeout(()=>{
+        wallEyesGroup.visible = !wallEyesGroup.visible;
+        tick();
+      }, 150 + Math.random()*200);
+    })();
+  }
 
   // Planta colgante sobre librero (maceta + tallos + hojas)
   const plantMat = new THREE.MeshStandardMaterial({ color:0x1a2a0e, roughness:1, flatShading:true });
@@ -874,6 +1044,94 @@
   box(0.24, 0.30, 0.08, bagMat, -2.30, 0.22, 1.52);   // bolsillo
   box(0.04, 0.42, 0.04, bagMat, -2.22, 0.30, 1.42);   // tira izq
   box(0.04, 0.42, 0.04, bagMat, -2.22, 0.30, 1.48);   // tira der
+
+  // ============================================================
+  // DESORDEN PROGRESIVO POR FASE — semana: papeles / mes: + botellas
+  // ============================================================
+  const paperMat  = new THREE.MeshStandardMaterial({ color:0xd8d4c8, roughness:1, flatShading:true });
+  const paperMat2 = new THREE.MeshStandardMaterial({ color:0xc9c2ae, roughness:1, flatShading:true });
+  const papersGroup = new THREE.Group();
+  const paperSpots = [
+    [-1.55,-1.25], [-1.05,-1.55], [1.05,-1.15], [0.35,-0.35], [-0.55,0.15], [1.7,-1.15],
+  ];
+  paperSpots.forEach(([x,z], i)=>{
+    const p = new THREE.Mesh(new THREE.BoxGeometry(0.16+Math.random()*0.05, 0.006, 0.21+Math.random()*0.05), i%2? paperMat2 : paperMat);
+    p.position.set(x, 0.065, z);
+    p.rotation.y = Math.random()*Math.PI;
+    papersGroup.add(p);
+  });
+  papersGroup.visible = false;
+  room.add(papersGroup);
+
+  const bottleGlassMat = new THREE.MeshStandardMaterial({ color:0x1e3a24, roughness:0.25, metalness:0.1, transparent:true, opacity:0.85 });
+  const bottleCapMat   = new THREE.MeshStandardMaterial({ color:0x2a2a2e, roughness:0.5 });
+  function makeBottle(x, z){
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.04,0.20,10), bottleGlassMat);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.014,0.022,0.07,10), bottleGlassMat);
+    const cap  = new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,0.02,10), bottleCapMat);
+    const onFloor = Math.random() < 0.5;
+    if(onFloor){
+      body.rotation.z = Math.PI/2; neck.rotation.z = Math.PI/2; cap.rotation.z = Math.PI/2;
+      body.position.set(x, 0.04, z);
+      neck.position.set(x + 0.13, 0.04, z);
+      cap.position.set(x + 0.17, 0.04, z);
+    } else {
+      body.position.set(x, 0.10, z);
+      neck.position.set(x, 0.215, z);
+      cap.position.set(x, 0.26, z);
+    }
+    g.add(body, neck, cap);
+    return g;
+  }
+
+  const bottlesGroup = new THREE.Group();
+  const bottleSpots = [ [1.15,-0.55], [1.85,-0.75], [-1.15,-1.35], [0.05,-1.15] ];
+  bottleSpots.forEach(([x,z])=> bottlesGroup.add(makeBottle(x,z)));
+  bottlesGroup.visible = false;
+  room.add(bottlesGroup);
+
+  // ============================================================
+  // AÑO — el doble de botellas y papel, + envolturas de dulces y platos sucios
+  // ============================================================
+  const anoExtraGroup = new THREE.Group();
+  const anoBottleSpots = [ [-0.35,-0.85], [1.55,-1.55], [-1.85,-0.55], [0.75,0.25] ];
+  anoBottleSpots.forEach(([x,z])=> anoExtraGroup.add(makeBottle(x,z)));
+
+  const anoPaperSpots = [ [-1.35,-0.15], [0.65,-1.75], [-0.15,-1.55], [1.4,-0.25], [-1.95,0.35], [0.9,-0.75] ];
+  anoPaperSpots.forEach(([x,z], i)=>{
+    const p = new THREE.Mesh(new THREE.BoxGeometry(0.16+Math.random()*0.05, 0.006, 0.21+Math.random()*0.05), i%2? paperMat2 : paperMat);
+    p.position.set(x, 0.065, z);
+    p.rotation.y = Math.random()*Math.PI;
+    anoExtraGroup.add(p);
+  });
+
+  // envolturas de dulces — láminas pequeñas, arrugadas y de colores vivos
+  const wrapperColors = [0xd83a5a, 0x2a8ad8, 0xd8b02a, 0x3ad86a];
+  const wrapperSpots = [ [-0.85,-0.45], [1.25,-1.85], [-1.65,-1.15], [0.25,0.05], [1.05,-0.35] ];
+  wrapperSpots.forEach(([x,z], i)=>{
+    const wrapMat = new THREE.MeshStandardMaterial({ color: wrapperColors[i % wrapperColors.length], roughness:0.35, metalness:0.4, flatShading:true });
+    const w = new THREE.Mesh(new THREE.BoxGeometry(0.05+Math.random()*0.02, 0.012, 0.06+Math.random()*0.02), wrapMat);
+    w.position.set(x, 0.07, z);
+    w.rotation.set((Math.random()-0.5)*0.6, Math.random()*Math.PI, (Math.random()-0.5)*0.6);
+    anoExtraGroup.add(w);
+  });
+
+  // platos de comida — plato + resto de comida
+  const dirtyPlateMat = new THREE.MeshStandardMaterial({ color:0xd8d4cc, roughness:0.4, flatShading:true });
+  const foodMat  = new THREE.MeshStandardMaterial({ color:0x5a4028, roughness:0.9, flatShading:true });
+  const plateSpots = [ [-1.05,-1.85], [1.65,-0.35] ];
+  plateSpots.forEach(([x,z])=>{
+    const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.115,0.012,14), dirtyPlateMat);
+    plate.position.set(x, 0.066, z);
+    const food = new THREE.Mesh(new THREE.SphereGeometry(0.035,8,6), foodMat);
+    food.scale.set(1,0.4,1);
+    food.position.set(x+0.02, 0.078, z-0.01);
+    anoExtraGroup.add(plate, food);
+  });
+
+  anoExtraGroup.visible = false;
+  room.add(anoExtraGroup);
 
   // Armario de madera — pared derecha, zona frontal
   box(0.55, 1.85, 0.50, wardrobeWoodMat, 2.15, 0.925, 0.30);        // cuerpo
@@ -984,22 +1242,16 @@
   bBox(0.04, 0.04, 0.04, metalMat,     BX+1.47, 0.876, BZ-1.06);  // llave fría
   bBox(0.03, 0.007,0.03, metalMat,     BX+1.1,  0.741, BZ-1.15);  // desagüe
 
-  // inodoro mejorado (pared derecha, medio)
+  // inodoro mejorado (pared derecha, medio) — cisterna contra la pared derecha (eje X), bowl hacia el cuarto
   const toiletMat  = new THREE.MeshStandardMaterial({ color:0x1e242c, roughness:0.5, flatShading:true });
   const seatTopMat = new THREE.MeshStandardMaterial({ color:0x14181e, roughness:0.7, flatShading:true });
-  bBox(0.42, 0.30, 0.50, toiletMat,  BX+1.15, 0.15, BZ+0.55);   // cuerpo/bowl
-  bBox(0.40, 0.025,0.48, seatTopMat, BX+1.15, 0.31, BZ+0.55);   // asiento
-  bBox(0.38, 0.025,0.46, toiletMat,  BX+1.15, 0.34, BZ+0.55);   // tapa
-  bBox(0.35, 0.34, 0.12, toiletMat,  BX+1.15, 0.50, BZ+0.74);   // cisterna
-  bBox(0.37, 0.028,0.14, toiletMat,  BX+1.15, 0.67, BZ+0.74);   // tapa cisterna
-  bBox(0.06, 0.03, 0.06, metalMat,   BX+1.15, 0.70, BZ+0.68);   // botón flush
-
-  // regadera (esquina derecha-trasera)
-  bBox(0.95, 0.06, 0.95, sinkMat, BX+0.85, 0.03,  BZ+1.05);
-  bBox(0.95, 1.75, 0.05, wallMat, BX+0.85, 0.875, BZ+1.47);
-  bBox(0.05, 1.75, 0.9,  wallMat, BX+1.37, 0.875, BZ+1.05);
-  bBox(0.03, 0.03, 0.18, furnMat, BX+0.85, 2.05,  BZ+1.35);
-  bBox(0.14, 0.04, 0.14, furnMat, BX+0.85, 2.04,  BZ+1.2);
+  const toiletZ = BZ + 0.65;
+  bBox(0.50, 0.30, 0.42, toiletMat,  BX+1.15, 0.15, toiletZ);   // cuerpo/bowl
+  bBox(0.48, 0.025,0.40, seatTopMat, BX+1.15, 0.31, toiletZ);   // asiento
+  bBox(0.46, 0.025,0.38, toiletMat,  BX+1.15, 0.34, toiletZ);   // tapa
+  bBox(0.12, 0.34, 0.35, toiletMat,  BX+1.45, 0.50, toiletZ);   // cisterna (contra la pared derecha)
+  bBox(0.14, 0.028,0.37, toiletMat,  BX+1.45, 0.67, toiletZ);   // tapa cisterna
+  bBox(0.06, 0.03, 0.06, metalMat,   BX+1.38, 0.70, toiletZ);   // botón flush
 
   // bañera — pared trasera, lado izquierdo
   const tubMat   = new THREE.MeshStandardMaterial({ color:0x1c2028, roughness:0.35, metalness:0.08, flatShading:true });
@@ -1033,7 +1285,7 @@
   bBox(0.04, 0.06, 0.04, sinkMat, BX+1.52, 1.02, BZ-0.65);     // frasco pequeño 2
   bBox(0.04, 0.09, 0.04, furnMat, BX+1.52, 1.045, BZ-0.74);    // frasco grande
 
-  // toallero (pared derecha, entre inodoro y regadera)
+  // toallero (pared derecha, junto al inodoro)
   bBox(0.02, 0.02, 0.48, sinkMat, BX+1.54, 1.18, BZ+0.22);     // barra toallero
   const towelMat = new THREE.MeshStandardMaterial({ color:0x1a1820, roughness:1, flatShading:true });
   bBox(0.02, 0.32, 0.44, towelMat, BX+1.53, 1.08, BZ+0.22);    // toalla colgada
@@ -1073,6 +1325,12 @@
   const PLAYER_SPEED = 2.4;
   const BOUND = { x: ROOM.w/2 - 0.35, z: ROOM.d/2 - 0.35 };
   let inBathroom = false;
+  let cameraShakeUntil = 0; // temblor por sobredosis de pastillas
+  let disolucionStillTimer = 0;
+  let disolucionBlurActive = false;
+  function triggerCameraShake(durationMs=500){
+    cameraShakeUntil = performance.now() + durationMs;
+  }
 
   function enterBathroom(){
     doHardCutBlack(()=>{
@@ -1085,6 +1343,7 @@
         AUDIO.bano.currentTime = 0; currentAmbient = AUDIO.bano;
         AUDIO.bano.play().catch(()=>{});
       }
+      showMonologue("Se supone que debería hacer algo.");
     });
   }
 
@@ -1125,6 +1384,7 @@
            document.getElementById('bathroomPanel').classList.contains('open') ||
            document.getElementById('baneraPanel').classList.contains('open') ||
            document.getElementById('windowPanel').classList.contains('open') ||
+           document.getElementById('notePanel').classList.contains('open') ||
            bedSeqActive ||
            endingSequenceActive;
   }
@@ -1132,7 +1392,7 @@
   // blur canvas when any choice panel is open
   (function(){
     const _canvas = document.getElementById('sceneCanvas');
-    const _panelIds = ['bathroomPanel','baneraPanel','windowPanel'];
+    const _panelIds = ['bathroomPanel','baneraPanel','windowPanel','notePanel'];
     const _obs = new MutationObserver(()=>{
       const open = _panelIds.some(id => document.getElementById(id).classList.contains('open'));
       _canvas.classList.toggle('blurred', open);
@@ -1153,6 +1413,11 @@
   let degradation = 0;
   let bedSeqActive = false; // secuencia de memoria interna al dormir (bloquea input 3D)
   let endingSequenceActive = false; // cutscene de final (caída, créditos) — bloquea input 3D
+  let bathedThisPhase = false; // se reinicia cada fase — ¿ya te bañaste en este ciclo?
+  let brushedThisPhase = false; // se reinicia cada fase — ¿ya te cepillaste los dientes en este ciclo?
+  let pillsTakenEver = false; // persiste entre fases — ¿alguna vez tomaste la pastilla?
+  let pillsTakenCountThisPhase = 0; // se reinicia cada fase — tomar de más tiembla la cámara y cambia el color de la luz
+  let trashCleanedThisPhase = false; // se reinicia cada fase — limpiar la basura suma selfCare una vez por ciclo
 
   function applyDegradation(){
     const t = degradation;
@@ -1172,10 +1437,24 @@
     });
   }
 
-  function showMonologue(text, ms=3200){
+  function showMonologue(text, ms=7000){
     monologueEl.textContent = text;
     monologueEl.classList.add('show');
     setTimeout(()=> monologueEl.classList.remove('show'), ms);
+  }
+
+  // ---------- aviso de salto de tiempo al despertar (blur breve + texto) ----------
+  const TIME_SKIP_TEXT = ['', 'Ha pasado una semana.', 'Ha pasado un mes.', 'Ha pasado un año.', 'Ya perdí la cuenta.'];
+  function showTimeSkip(text){
+    if(!text) return;
+    const el = document.getElementById('timeSkipCaption');
+    el.textContent = text;
+    el.classList.add('show');
+    canvas.classList.add('blurred-soft');
+    setTimeout(()=>{
+      el.classList.remove('show');
+      canvas.classList.remove('blurred-soft');
+    }, 2600);
   }
 
   const MONOLOGUES = [
@@ -1184,10 +1463,42 @@
     "Nadie te ve. Es más fácil así."
   ];
 
+  // ---------- parpadeo de luz (fase "año" en adelante) ----------
+  let lightFlickerActive = false;
+  function startLightFlicker(){
+    if(lightFlickerActive) return;
+    lightFlickerActive = true;
+    const baseIntensity = edisL1.intensity;
+    (function tick(){
+      if(!lightFlickerActive) return;
+      edisL1.intensity = baseIntensity * (0.3 + Math.random()*0.8);
+      setTimeout(tick, 90 + Math.random()*220);
+    })();
+  }
+
+  // ---------- desorden progresivo del cuarto según la fase ----------
+  function applyRoomSetDressing(){
+    papersGroup.visible = phaseIndex >= 1;   // semana en adelante: papeles tirados
+    bottlesGroup.visible = phaseIndex >= 2;  // mes en adelante: + botellas
+    const frameHasFallen = phaseIndex >= 3;  // año en adelante: el cuadro se cae
+    anoExtraGroup.visible = frameHasFallen;  // año en adelante: el doble de botellas/papel + envolturas + platos
+    frame3.visible = !frameHasFallen;
+    photo3.visible = !frameHasFallen;
+    fallenFrameGroup.visible = frameHasFallen;
+    if(frameHasFallen) startLightFlicker();
+  }
+
   function advancePhase(){
     if(phaseIndex >= PHASES.length - 1) return; // ya en disolución
     phaseIndex++;
     currentPhase = PHASE_KEYS[phaseIndex];
+    bathedThisPhase = false;
+    brushedThisPhase = false;
+    pillsTakenCountThisPhase = 0;
+    trashCleanedThisPhase = false;
+    pcCleanUseGrantedThisPhase = false;
+    setRoomMoodColor('violeta'); // dormir siempre devuelve la luz a la normalidad
+    applyRoomSetDressing();
     degradation = Math.min(degradation + 0.22, 0.9);
     if(selfCare > 2) degradation = Math.max(0, degradation - 0.08);
     applyDegradation();
@@ -1198,7 +1509,10 @@
       inBathroom = false;
       camera.position.set(0, 1.6, 1.4);
       yaw = 0; pitch = 0;
+      showTimeSkip(TIME_SKIP_TEXT[phaseIndex]);
       if(phaseIndex < MONOLOGUES.length) showMonologue(MONOLOGUES[phaseIndex-1] || MONOLOGUES[0]);
+      // ojos rojos parpadeantes en las paredes — solo en "año"/"disolución", y solo si alguna vez tomaste pastillas
+      if(pillsTakenEver && phaseIndex >= 3) triggerWallEyes(4000);
       if(phaseIndex === PHASES.length - 1){
         enterDisolucion();
       } else {
@@ -1218,6 +1532,7 @@
 
   // ---------- fase de disolución: activar cámara ----------
   let webcamActive = false;
+  let reflectionCalm = null; // null=aun no evaluado; true=tranquilo (camino al final bueno); false=glitch de TV
   function enterDisolucion(){
     phaseLabel.textContent = 'disolución';
     const reflection = document.getElementById('reflection');
@@ -1232,6 +1547,7 @@
         .catch(()=>{ /* si no hay permiso, la obra continúa sin el reflejo */ });
     }
     SFX.pensamientos(selfCare < 0 ? 3 : 0);
+    ensureDisolucionReverb();
     // en disolución aparece la ventana como hotspot interactuable
   }
 
@@ -1272,29 +1588,18 @@
     AUDIO.pensamientos.addEventListener('ended', onEnded);
   }
 
-  // ---------- reinicio del bucle eterno tras los créditos ----------
-  function resetToDay1AfterCredits(){
-    phaseIndex = 0;
-    currentPhase = PHASE_KEYS[0];
-    degradation = 0;
-    endingTriggered = false;
-    endingSequenceActive = false;
-    applyDegradation();
-    phaseLabel.textContent = PHASES[0];
+  // ---------- pantalla final compartida: "gracias por jugar" + título + reiniciar ----------
+  function showEndScreen(){
     document.getElementById('creditsScreen').classList.remove('show'); // por si se invoca fuera del flujo normal de showCredits()
-    document.getElementById('reflection').classList.remove('on');
-    webcamActive = false;
-    camera.position.set(0, 1.6, 1.4);
-    camera.rotation.z = 0;
-    yaw = 0; pitch = 0;
-    SFX.habitacion(); // el ambiente retoma — clic en el canvas re-adquiere el pointer lock
+    document.getElementById('endScreen').classList.add('show');
   }
+  document.getElementById('btnRestart').addEventListener('click', ()=> window.location.reload());
 
   function endingSuicidio(){
     if(endingTriggered) return; endingTriggered = true;
     endingSequenceActive = true;
     document.exitPointerLock();
-    showMonologue("El vidrio está frío... Si lo golpeo con suficiente fuerza, el sonido romperá este silencio eterno. Un paso al frente. Un segundo flotando... en el vacío. Caída libre. Corte.", 3400);
+    showMonologue("El vidrio está frío... Si lo golpeo con suficiente fuerza, el sonido romperá este silencio eterno. Un paso al frente. Un segundo flotando... en el vacío. Caída libre. Corte.", 7000);
 
     setTimeout(()=>{
       playCameraFallAnimation(()=>{
@@ -1308,10 +1613,10 @@
           AUDIO.pensamientos.currentTime = 0;
           AUDIO.pensamientos.play().catch(()=>{});
           currentAmbient = AUDIO.pensamientos;
-          showCredits(resetToDay1AfterCredits); // al terminar: bucle eterno, de vuelta a "dia1"
+          showCredits(showEndScreen); // al terminar la canción y los créditos: pantalla de "gracias por jugar"
         });
       });
-    }, 2600); // deja tiempo para leer el diálogo previo antes de caer
+    }, 7000); // deja ~7s para leer el diálogo previo antes de caer
   }
 
   function endingDormirSiempre(){
@@ -1330,19 +1635,21 @@
     monologueEl.classList.add('show');
     fadeLayer.classList.add('show'); // fade extremadamente lento, permanente, sin corte duro
     fadeLayer.style.transition = 'opacity 9s ease';
+    setTimeout(showEndScreen, 9800); // tras completarse el fade lento
   }
 
   function endingSalida(){
     if(endingTriggered) return; endingTriggered = true;
     endingSequenceActive = true; // única conclusión real: controles bloqueados para siempre
-    showMonologue("Mi mano tiembla en la perilla... Hace tanto tiempo que no toco metal frío que no sea el de mi teclado. Un paso. El umbral se desvanece. La luz blanca me ciega... Por fin... libre.", 3600);
+    showMonologue("Mi mano tiembla en la perilla... Hace tanto tiempo que no toco metal frío que no sea el de mi teclado. Un paso. El umbral se desvanece. La luz blanca me ciega... Por fin... libre.", 7000);
     SFX.pasos();
     setTimeout(()=>{
       SFX.salida();
       // corte abrupto a blanco absoluto — permanente (doHardCutBlack revierte solo, no sirve aquí)
       fadeLayer.className = 'white';
       fadeLayer.classList.add('show');
-    }, 2600);
+      setTimeout(showEndScreen, 2500); // un momento en blanco antes de la pantalla final
+    }, 7000); // deja ~7s para leer el diálogo previo antes del corte
   }
 
   function checkSalidaEligible(){
@@ -1359,6 +1666,8 @@
     { name:'bath-exit', x:BX-1.0,  z:BZ,      r:0.75, label:'[E] salir del baño',       room:'bath' },
     { name:'bath-sink', x:BX+1.1,  z:BZ-1.15, r:0.8,  label:'[E] lavamanos',            room:'bath' },
     { name:'bath-tub',  x:BX-0.60, z:BZ+0.90, r:1.1,  label:'[E] bañera',               room:'bath' },
+    { name:'recognition', x:-2.35, z:-1.6,   r:0.7,  label:'[E] ver el reconocimiento', room:'main' },
+    { name:'doorNote',  x:0,        z:2.05,    r:0.6,  label:'[E] leer la nota',          room:'main' },
   ];
   let currentHotspot = null;
 
@@ -1378,6 +1687,12 @@
       const dist = Math.hypot(dx,dz);
       if(dist < 1.1 && dist < nearestDist){ nearest = { name:'window', label:'[E] la ventana' }; nearestDist = dist; }
     }
+    // basura tirada: solo si hay algo que limpiar y aún no se limpió en este ciclo
+    if(!inBathroom && phaseIndex >= 1 && !trashCleanedThisPhase){
+      const dx = camera.position.x - 0.3, dz = camera.position.z - (-1.0);
+      const dist = Math.hypot(dx,dz);
+      if(dist < 1.3 && dist < nearestDist){ nearest = { name:'trash', label:'[E] limpiar la basura' }; nearestDist = dist; }
+    }
     currentHotspot = nearest;
     if(nearest){ interactPrompt.textContent = nearest.label; interactPrompt.style.display='block'; }
     else interactPrompt.style.display='none';
@@ -1392,6 +1707,28 @@
     if(currentHotspot.name === 'bath-sink') openBathroom();
     if(currentHotspot.name === 'bath-tub')  openBaneraPanel();
     if(currentHotspot.name === 'window')    openWindowPanel();
+    if(currentHotspot.name === 'recognition') viewRecognition();
+    if(currentHotspot.name === 'trash')     cleanTrash();
+    if(currentHotspot.name === 'doorNote')  openNotePanel();
+  }
+
+  // ---------- limpiar la basura tirada: pequeño gesto de autocuidado ----------
+  function cleanTrash(){
+    if(trashCleanedThisPhase) return;
+    trashCleanedThisPhase = true;
+    selfCare += 1;
+    papersGroup.visible = false;
+    bottlesGroup.visible = false;
+    anoExtraGroup.visible = false;
+    showMonologue("Recoges la basura del piso. Es poco, pero es algo.");
+  }
+
+  // ---------- reconocimiento en la pared: recuerdo en cadena ----------
+  function viewRecognition(){
+    showMonologue("Fui buena en matemáticas...", 3000);
+    setTimeout(()=> showMonologue("Supongo que mis maestras pensaban que sería una genia de grande.", 4200), 3300);
+    setTimeout(()=> showMonologue("Qué decepcionante...", 2600), 3300+4500);
+    setTimeout(()=> showMonologue("He olvidado hasta cómo tomar un lápiz.", 4200), 3300+4500+2900);
   }
 
   // ---------- cama: secuencia de memoria interna (novela visual) ----------
@@ -1437,6 +1774,28 @@
     pensamientosFilter.frequency.value = 20000; // sin filtrar por defecto
     pensamientosSource.connect(pensamientosFilter);
     pensamientosFilter.connect(ctx.destination);
+  }
+
+  // ---------- reverb ligero sobre "pensamientos" (el ambiente real en disolución), solo al quedarte quieto ----------
+  // reutiliza pensamientosSource/pensamientosFilter ya creados por ensurePensamientosFilter() —
+  // un <audio> solo admite un único createMediaElementSource en toda su vida
+  let disolucionReverbWet = null, disolucionReverbDelay = null, disolucionReverbFeedback = null;
+  function ensureDisolucionReverb(){
+    if(disolucionReverbWet) return;
+    ensurePensamientosFilter(); // garantiza que pensamientosFilter ya exista y esté conectado
+    const ctx = ac();
+    disolucionReverbWet = ctx.createGain(); disolucionReverbWet.gain.value = 0; // arranca seco
+    disolucionReverbDelay = ctx.createDelay(1.0); disolucionReverbDelay.delayTime.value = 0.24;
+    disolucionReverbFeedback = ctx.createGain(); disolucionReverbFeedback.gain.value = 0.4;
+    pensamientosFilter.connect(disolucionReverbDelay); // toma la señal ya filtrada, en paralelo a su salida seca existente
+    disolucionReverbDelay.connect(disolucionReverbFeedback);
+    disolucionReverbFeedback.connect(disolucionReverbDelay);
+    disolucionReverbDelay.connect(disolucionReverbWet);
+    disolucionReverbWet.connect(ctx.destination);
+  }
+  function setDisolucionReverbWet(v){
+    if(!disolucionReverbWet) return;
+    disolucionReverbWet.gain.setTargetAtTime(v, ac().currentTime, 0.4);
   }
 
   function onBed(){
@@ -1548,9 +1907,15 @@
   function openBathroom(){
     bathroomPanel.classList.add('open');
     document.exitPointerLock();
+    // reflexión sobre los dientes — solo en la fase "semana", si aún no te cepillaste este ciclo
+    if(currentPhase === 'semana' && !brushedThisPhase){
+      if(pillsTakenEver) showMonologue("Cepillarme los dientes me haría sentir mejor.");
+      else showMonologue("Mi boca sabe mal. Supongo que los dientes también se pudren tarde o temprano.");
+    }
   }
   document.getElementById('btnBrush').addEventListener('click', ()=>{
     selfCare += 1;
+    brushedThisPhase = true;
     showMonologue("Mecánico. Pero lo hiciste.");
     bathroomPanel.classList.remove('open'); canvas.requestPointerLock();
   });
@@ -1563,9 +1928,19 @@
     showMonologue("No te reconoces. O quizás sí, y eso es lo que asusta.");
     bathroomPanel.classList.remove('open'); canvas.requestPointerLock();
   });
+  const PILLS_OVERDOSE_COLORS = ['azul', 'verde', 'rojo', 'amarillo']; // 2da, 3ra, 4ta, 5ta+ pastilla del mismo ciclo
   document.getElementById('btnPills').addEventListener('click', ()=>{
     selfCare += 1;
-    showMonologue("Una pastilla roja... una pastilla azul... Da igual el color o el sabor amargo. Cumplir con la rutina básica me recuerda que sigo atrapada en este cuerpo. Al menos mis dientes siguen limpios hoy.", 4600);
+    pillsTakenEver = true;
+    pillsTakenCountThisPhase++;
+    showMonologue("Una pastilla roja... una pastilla azul... Da igual el color o el sabor amargo. Cumplir con la rutina básica me recuerda que sigo atrapada en este cuerpo. Al menos mis dientes siguen limpios hoy.", 7000);
+    triggerPillFlicker(10000);
+    setTimeout(()=> showMonologue("No hay peor guardia de cárcel que mi propia conciencia.", 4000), 4000);
+    if(pillsTakenCountThisPhase >= 2){
+      const idx = Math.min(pillsTakenCountThisPhase - 2, PILLS_OVERDOSE_COLORS.length - 1);
+      setRoomMoodColor(PILLS_OVERDOSE_COLORS[idx]);
+      triggerCameraShake(500);
+    }
     bathroomPanel.classList.remove('open'); canvas.requestPointerLock();
   });
   document.getElementById('btnBathClose').addEventListener('click', ()=>{
@@ -1577,9 +1952,15 @@
   function openBaneraPanel(){
     baneraPanel.classList.add('open');
     document.exitPointerLock();
+    // reflexión sobre bañarte — en fases "semana" y "mes", si aún no te bañaste este ciclo
+    if((currentPhase === 'semana' || currentPhase === 'mes') && !bathedThisPhase){
+      if(pillsTakenEver) showMonologue("Un baño me haría sentir mejor.");
+      else showMonologue("Huelo mal. Espero que pronto sea podredumbre.");
+    }
   }
   document.getElementById('btnTakeBath').addEventListener('click', ()=>{
     selfCare += 3;
+    bathedThisPhase = true;
     showMonologue("Calor. Silencio. Unos minutos de nada. Quizás basta.");
     baneraPanel.classList.remove('open'); canvas.requestPointerLock();
   });
@@ -1604,6 +1985,29 @@
   });
   document.getElementById('btnWinClose').addEventListener('click', ()=>{
     windowPanel.classList.remove('open'); canvas.requestPointerLock();
+  });
+
+  // ---------- nota bajo la puerta (de mamá) — una por fase ----------
+  const DOOR_NOTES = [
+    { note: "Te esperamos abajo para que vengas a cenar.\nVerás que todo mejorará.\nCon cariño, mamá <3",
+      reaction: "¿Con qué cara puedo ir con ellos y cenar como si nada?" },
+    { note: "Espero que esta etapa de duelo pase para ti pronto.\nTe dejo la cena con cariño, mamá." },
+    { note: "Esta es tu cena de hoy. No te duermas tan tarde." },
+    { note: "Cena lista." },
+    { note: "( ya no alcanzas a distinguir la letra )",
+      reaction: "Parece un reclamo triste." },
+  ];
+  const notePanel = document.getElementById('notePanel');
+  function openNotePanel(){
+    const entry = DOOR_NOTES[Math.min(phaseIndex, DOOR_NOTES.length - 1)];
+    document.getElementById('noteText').textContent = entry.note;
+    notePanel.classList.add('open');
+    document.exitPointerLock();
+  }
+  document.getElementById('btnNoteSave').addEventListener('click', ()=>{
+    const entry = DOOR_NOTES[Math.min(phaseIndex, DOOR_NOTES.length - 1)];
+    notePanel.classList.remove('open'); canvas.requestPointerLock();
+    if(entry.reaction) showMonologue(entry.reaction);
   });
 
   // ---------- puerta: loop normal en fases 0-3, chequeo de Salida en disolución ----------
@@ -1631,9 +2035,12 @@
   let activeTab = 'plataformas';
 
   let pendingForoMonologue = null; // se muestra al salir de la PC, no dentro del overlay (z-index)
+  let pcHadToxicPostThisSession = false; // se marca true si publicas en twt o comentas en el foro
+  let pcCleanUseGrantedThisPhase = false; // se reinicia cada fase — solo suma selfCare la primera vez
 
   function openPC(){
     isPcOverlayOpen = true;
+    pcHadToxicPostThisSession = false;
     pcOverlay.classList.add('open');
     pcOverlay.classList.remove('appOpen'); // siempre abre mostrando el escritorio, no una app directamente
     document.exitPointerLock();
@@ -1647,8 +2054,13 @@
     pcOverlay.classList.remove('appOpen');
     canvas.requestPointerLock();
     if(!inBathroom) SFX.habitacion(); // detiene computadora.wav y retoma ambiente
+    if(!pcHadToxicPostThisSession && !pcCleanUseGrantedThisPhase){
+      selfCare += 1;
+      pcCleanUseGrantedThisPhase = true;
+      pendingForoMonologue = "Usé la computadora y no dije nada que lamentar. Pequeño alivio.";
+    }
     if(pendingForoMonologue){
-      showMonologue(pendingForoMonologue, 4800);
+      showMonologue(pendingForoMonologue, 7000);
       pendingForoMonologue = null;
     }
   }
@@ -1737,6 +2149,7 @@
       twtPostCount++;
       twtHistory.push({ text: val, mine: true });
       selfCare -= 1; // publicar también tiene costo, menor que el foro
+      pcHadToxicPostThisSession = true;
       SFX.notificacion();
       input.value = '';
       counter.textContent = `0/${maxLen}`;
@@ -2008,6 +2421,7 @@
       if(!val) return;
       forumCommented = true;
       selfCare -= 1;
+      pcHadToxicPostThisSession = true;
       pendingForoMonologue = "Le conté a unos desconocidos en la red cómo se siente el vacío de no hacer nada con tu vida... Solo se rieron. Alguien me respondió que apagara la pantalla y saliera a buscar trabajo. Qué fácil lo hacen ver. No entienden que afuera el aire quema.";
       const myId = foroPostCounter++;
       const repliesEl = document.getElementById('foroReplies');
@@ -2373,6 +2787,44 @@
       } else {
         camera.position.x = Math.max(-BOUND.x, Math.min(BOUND.x, camera.position.x));
         camera.position.z = Math.max(-BOUND.z, Math.min(BOUND.z, camera.position.z));
+      }
+
+      // temblor de cámara (sobredosis de pastillas)
+      if(now < cameraShakeUntil){
+        const mag = 0.02;
+        camera.position.x += (Math.random()-0.5)*mag;
+        camera.position.y += (Math.random()-0.5)*mag;
+        camera.rotation.z = (Math.random()-0.5)*0.04;
+      } else if(camera.rotation.z !== 0){
+        camera.rotation.z = 0;
+      }
+
+      // disolución: al quedarte quieto, un pequeño blur + reverb; se quita en cuanto te mueves
+      if(currentPhase === 'disolucion' && !inBathroom){
+        if(mx || mz){
+          disolucionStillTimer = 0;
+          if(disolucionBlurActive){
+            disolucionBlurActive = false;
+            canvas.classList.remove('blurred-soft');
+            setDisolucionReverbWet(0);
+          }
+        } else {
+          disolucionStillTimer += dt;
+          if(disolucionStillTimer > 0.6 && !disolucionBlurActive){
+            disolucionBlurActive = true;
+            canvas.classList.add('blurred-soft');
+            setDisolucionReverbWet(0.35);
+          }
+        }
+
+        // el reflejo se calma (sin glitch) si vas camino al final bueno; si no, sigue como TV con estática
+        if(webcamActive){
+          const shouldBeCalm = checkSalidaEligible();
+          if(shouldBeCalm !== reflectionCalm){
+            reflectionCalm = shouldBeCalm;
+            document.getElementById('reflection').classList.toggle('calm', reflectionCalm);
+          }
+        }
       }
 
       updateHotspot();
