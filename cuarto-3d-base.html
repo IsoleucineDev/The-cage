@@ -80,14 +80,29 @@
   #bedFade.show{ opacity:0.8; }
   #bedDialogueBox{
     position:absolute; bottom:16%; left:50%; transform:translateX(-50%);
-    width:min(560px,82%); min-height:70px;
+    width:min(580px,84%); min-height:90px;
     background:rgba(8,8,10,0.7); border:1px solid #2a2a2e;
-    padding:18px 22px; z-index:23; display:none; flex-direction:column; gap:12px; cursor:pointer;
+    padding:22px 26px; z-index:23; display:none; flex-direction:column; gap:12px; cursor:pointer;
   }
   #bedDialogueBox.show{ display:flex; }
-  #bedDialogueText{ font-size:13px; color:var(--accent); line-height:1.7; font-style:italic; min-height:3.4em; }
-  #bedDialogueHint{ font-size:10px; color:var(--fg-dim); text-align:right; letter-spacing:.03em; opacity:0.8; }
+  #bedDialogueText{ font-size:15px; color:var(--accent); line-height:1.75; font-style:italic; min-height:3.4em; }
+  #bedDialogueHint{ font-size:11px; color:var(--fg-dim); text-align:right; letter-spacing:.03em; opacity:0.8; }
   #bedDialogueHint.wake{ color:var(--accent); opacity:1; }
+
+  /* ---------- pantalla de créditos (final Suicidio) ---------- */
+  #creditsScreen{
+    position:absolute; inset:0; background:#000; z-index:60; display:none;
+    align-items:center; justify-content:center; opacity:0; transition:opacity 2.2s ease;
+  }
+  #creditsScreen.show{ display:flex; opacity:1; }
+  .credits-inner{ text-align:center; max-width:720px; padding:40px; }
+  .credits-label{
+    font-size:13px; letter-spacing:.25em; color:#8f8f96; text-transform:uppercase; margin-bottom:14px;
+  }
+  .credits-name{ font-size:26px; letter-spacing:.06em; color:#f2f2f4; font-weight:600; margin-bottom:6px; }
+  .credits-role{ font-size:12.5px; letter-spacing:.1em; color:#7a7a82; text-transform:uppercase; margin-bottom:34px; }
+  .credits-divider{ width:120px; height:1px; background:#3a3a3e; margin:26px auto; }
+  .credits-event{ font-size:15px; letter-spacing:.08em; color:#c9c9cf; line-height:1.8; text-transform:uppercase; }
 
   /* ---------- webcam reflection (fase disolución) ---------- */
   #reflection{
@@ -254,6 +269,19 @@
       <div id="bedDialogueHint">click o [espacio] para continuar</div>
     </div>
     <div id="reflection"><video id="reflectVideo" autoplay muted playsinline></video></div>
+
+    <div id="creditsScreen">
+      <div class="credits-inner">
+        <div class="credits-label">Desarrollado y producido por</div>
+        <div class="credits-name">Ileana Tapia Castillo</div>
+        <div class="credits-role">Dirección Artística y Programación</div>
+        <div class="credits-name">Víctor Manuel Cachola Cervantes</div>
+        <div class="credits-role">Composición Musical y Masterización</div>
+        <div class="credits-divider"></div>
+        <div class="credits-label">Proyecto creado para:</div>
+        <div class="credits-event">XXXVI Concurso de Aparatos y Experimentos<br>de Física / STEM</div>
+      </div>
+    </div>
 
     <div id="bathroomPanel">
       <p>&gt; lavamanos</p>
@@ -971,11 +999,12 @@
   window.addEventListener('keyup', e=>{ keys[e.key.toLowerCase()]=false; });
 
   function anyPanelOpen(){
-    return document.getElementById('pcOverlay').classList.contains('open') ||
+    return isPcOverlayOpen ||
            document.getElementById('bathroomPanel').classList.contains('open') ||
            document.getElementById('baneraPanel').classList.contains('open') ||
            document.getElementById('windowPanel').classList.contains('open') ||
-           bedSeqActive;
+           bedSeqActive ||
+           endingSequenceActive;
   }
 
   // blur canvas when any choice panel is open
@@ -993,11 +1022,15 @@
   // ESTADO NARRATIVO
   // ============================================================
   const PHASES = ['día 1','semana','mes','año','disolución'];
+  const PHASE_KEYS = ['dia1','semana','mes','ano','disolucion']; // claves de estado legibles (currentPhase)
   let phaseIndex = 0;
-  let selfcare = 0; // stat oculto, nunca mostrado en UI
+  let currentPhase = PHASE_KEYS[0]; // espejo legible de phaseIndex, progresa junto con él
+  let selfCare = 0; // stat oculto, nunca mostrado en UI
   let forumCommented = false;
+  let isPcOverlayOpen = false; // espejo de pcOverlay.classList('open')
   let degradation = 0;
   let bedSeqActive = false; // secuencia de memoria interna al dormir (bloquea input 3D)
+  let endingSequenceActive = false; // cutscene de final (caída, créditos) — bloquea input 3D
 
   function applyDegradation(){
     const t = degradation;
@@ -1032,8 +1065,9 @@
   function advancePhase(){
     if(phaseIndex >= PHASES.length - 1) return; // ya en disolución
     phaseIndex++;
+    currentPhase = PHASE_KEYS[phaseIndex];
     degradation = Math.min(degradation + 0.22, 0.9);
-    if(selfcare > 2) degradation = Math.max(0, degradation - 0.08);
+    if(selfCare > 2) degradation = Math.max(0, degradation - 0.08);
     applyDegradation();
     phaseLabel.textContent = PHASES[phaseIndex];
     stopAmbient();   // pausa el ambiente mientras duerme
@@ -1075,7 +1109,7 @@
         })
         .catch(()=>{ /* si no hay permiso, la obra continúa sin el reflejo */ });
     }
-    SFX.pensamientos(selfcare < 0 ? 3 : 0);
+    SFX.pensamientos(selfCare < 0 ? 3 : 0);
     // en disolución aparece la ventana como hotspot interactuable
   }
 
@@ -1084,38 +1118,113 @@
   // ============================================================
   let endingTriggered = false;
 
+  // ---------- animación de cámara: caída pesada ----------
+  function playCameraFallAnimation(callback){
+    const startY = camera.position.y;
+    const startPitch = pitch;
+    const dur = 1300;
+    const t0 = performance.now();
+    function step(now){
+      const t = Math.min((now - t0) / dur, 1);
+      const ease = t * t; // acelera como una caída real
+      camera.position.y = startY - ease * 0.9;
+      pitch = startPitch - ease * 0.9;
+      camera.rotation.order = 'YXZ';
+      camera.rotation.x = pitch;
+      camera.rotation.z = ease * 0.22; // ligero vuelco lateral
+      if(t < 1){ requestAnimationFrame(step); }
+      else if(callback){ callback(); }
+    }
+    requestAnimationFrame(step);
+  }
+
+  // ---------- pantalla de créditos: espera a que termine la canción ----------
+  function showCredits(onDone){
+    const el = document.getElementById('creditsScreen');
+    el.classList.add('show');
+    function onEnded(){
+      AUDIO.pensamientos.removeEventListener('ended', onEnded);
+      el.classList.remove('show');
+      setTimeout(()=>{ if(onDone) onDone(); }, 1400); // deja terminar el fade-out visual
+    }
+    AUDIO.pensamientos.addEventListener('ended', onEnded);
+  }
+
+  // ---------- reinicio del bucle eterno tras los créditos ----------
+  function resetToDay1AfterCredits(){
+    phaseIndex = 0;
+    currentPhase = PHASE_KEYS[0];
+    degradation = 0;
+    endingTriggered = false;
+    endingSequenceActive = false;
+    applyDegradation();
+    phaseLabel.textContent = PHASES[0];
+    document.getElementById('creditsScreen').classList.remove('show'); // por si se invoca fuera del flujo normal de showCredits()
+    document.getElementById('reflection').classList.remove('on');
+    webcamActive = false;
+    camera.position.set(0, 1.6, 1.4);
+    camera.rotation.z = 0;
+    yaw = 0; pitch = 0;
+    SFX.habitacion(); // el ambiente retoma — clic en el canvas re-adquiere el pointer lock
+  }
+
   function endingSuicidio(){
     if(endingTriggered) return; endingTriggered = true;
-    SFX.pensamientos(4);
-    setTimeout(()=> SFX.caida(), 600);
-    doHardCutBlack(()=>{
-      showMonologue("No pasó nada. Sigues aquí.", 4200);
-      setTimeout(()=>{
-        // regreso al mismo cuarto — el bucle continúa, sin más avance
-        camera.position.set(0, 1.6, 1.4);
-      }, 400);
-    });
+    endingSequenceActive = true;
+    document.exitPointerLock();
+    showMonologue("El vidrio está frío... Si lo golpeo con suficiente fuerza, el sonido romperá este silencio eterno. Un paso al frente. Un segundo flotando... como las cosas en el espacio. Caída libre. Corte.", 3400);
+
+    setTimeout(()=>{
+      playCameraFallAnimation(()=>{
+        SFX.caida();
+        doHardCutBlack(()=>{
+          // "pensamientos" suena completa (sin loop) mientras corren los créditos
+          stopAll();
+          AUDIO.pensamientos.loop = false;
+          AUDIO.pensamientos.playbackRate = 1.0;
+          AUDIO.pensamientos.volume = 0.85;
+          AUDIO.pensamientos.currentTime = 0;
+          AUDIO.pensamientos.play().catch(()=>{});
+          currentAmbient = AUDIO.pensamientos;
+          showCredits(resetToDay1AfterCredits); // al terminar: bucle eterno, de vuelta a "dia1"
+        });
+      });
+    }, 2600); // deja tiempo para leer el diálogo previo antes de caer
   }
 
   function endingDormirSiempre(){
     if(endingTriggered) return; endingTriggered = true;
-    SFX.dormir();
+    endingSequenceActive = true; // controles bloqueados de forma permanente
+    document.exitPointerLock();
+    stopAll();
+    // nana/lullaby: no existe un archivo dedicado en Musica/ todavía —
+    // se reutiliza 'dormir.wav' en loop como placeholder temático (ver nota al usuario)
+    AUDIO.dormir.loop = true;
+    AUDIO.dormir.volume = 0.5;
+    AUDIO.dormir.currentTime = 0;
+    AUDIO.dormir.play().catch(()=>{});
+    currentAmbient = AUDIO.dormir;
     monologueEl.textContent = "Ya no hace falta despertar.";
     monologueEl.classList.add('show');
-    fadeLayer.classList.add('show'); // fade lento, sin corte duro
-    fadeLayer.style.transition = 'opacity 5s ease';
+    fadeLayer.classList.add('show'); // fade extremadamente lento, permanente, sin corte duro
+    fadeLayer.style.transition = 'opacity 9s ease';
   }
 
   function endingSalida(){
     if(endingTriggered) return; endingTriggered = true;
-    SFX.pasos(); SFX.salida();
-    doHardCutBlack(()=>{
-      showMonologue("Sales. No sabes a dónde, pero sales.", 5000);
-    }, 'white');
+    endingSequenceActive = true; // única conclusión real: controles bloqueados para siempre
+    showMonologue("Mi mano tiembla en la perilla... Hace tanto tiempo que no toco metal frío que no sea el de mi teclado. Un paso. El umbral se desvanece. La luz blanca me ciega... Por fin... libre.", 3600);
+    SFX.pasos();
+    setTimeout(()=>{
+      SFX.salida();
+      // corte abrupto a blanco absoluto — permanente (doHardCutBlack revierte solo, no sirve aquí)
+      fadeLayer.className = 'white';
+      fadeLayer.classList.add('show');
+    }, 2600);
   }
 
   function checkSalidaEligible(){
-    return selfcare >= 3 && !forumCommented;
+    return selfCare >= 3 && !forumCommented;
   }
 
   // ============================================================
@@ -1165,22 +1274,24 @@
 
   // ---------- cama: secuencia de memoria interna (novela visual) ----------
   const BED_MEMORY_LINES = [
-    [ // día 1 — recuerdos cálidos, coherentes
-      "A veces recuerdo el olor del laboratorio... las vibraciones de las ondas ultrasónicas sosteniendo cosas en el aire. Todo flotaba de forma tan limpia.",
-      "El crujido del papel cuando hacía figuras de origami para explicar ecuaciones en la pizarra. La gente sonreía.",
+    [ // día 1 — recuerdos cálidos, coherentes (introspección completa)
+      "Un bloque cae. Otro se acomoda. Una línea desaparece... ¿A dónde se van los fragmentos que borramos para seguir viviendo?",
+      "A veces el silencio de este cuarto me miente. Me hace creer que sigo en el laboratorio de la preparatoria, rodeada de ondas ultrasónicas, viendo cómo las cosas flotaban magnéticamente en el aire... Todo era tan puro cuando flotaba.",
+      "El crujido del papel... las figuras de origami que doblaba para explicar ecuaciones en la pizarra de Vicente Guerrero... Los niños sonreían. Había un propósito. ¿En qué momento me encerré en esta caja de tres dimensiones?",
       "¿Por qué ahora se siente tan lejano?",
       "Mañana será distinto. Siempre pienso eso.",
     ],
     [ // semana — empieza la duda
       "El laboratorio otra vez. Las ondas sosteniendo cosas en el aire, tan limpio.",
       "Ya no sé si sonreían por la explicación o por mí.",
+      "No mires la ventana. El vidrio está sudando. Si te quedas viendo el reflejo el tiempo suficiente, la persona que programó este entorno te borrará del script.",
       "¿Y si nunca salgo de este cuarto?",
       "Duérmete. Mañana lo piensas.",
     ],
     [ // mes — más corto, más oscuro, quiebre de la cuarta pared
       "Ondas en el aire. Ya casi no recuerdo el olor.",
       "¿Y si la persona que diseñó estas tres dimensiones me deja atrapada en el bucle para siempre?",
-      "Cállate. Solo duérmete.",
+      "Cállate. Solo duérmete. Mañana el render será diferente. Tiene que ser diferente.",
     ],
     [ // año — fragmentado, apagándose
       "Ondas. Aire. Ya no.",
@@ -1317,12 +1428,12 @@
     document.exitPointerLock();
   }
   document.getElementById('btnBrush').addEventListener('click', ()=>{
-    selfcare += 1;
+    selfCare += 1;
     showMonologue("Mecánico. Pero lo hiciste.");
     bathroomPanel.classList.remove('open'); canvas.requestPointerLock();
   });
   document.getElementById('btnWashFace').addEventListener('click', ()=>{
-    selfcare += 1;
+    selfCare += 1;
     showMonologue("El agua fría en la cara. Por un segundo, sientes algo.");
     bathroomPanel.classList.remove('open'); canvas.requestPointerLock();
   });
@@ -1331,8 +1442,8 @@
     bathroomPanel.classList.remove('open'); canvas.requestPointerLock();
   });
   document.getElementById('btnPills').addEventListener('click', ()=>{
-    selfcare += 2;
-    showMonologue("Las tragas sin agua. Ya sabes cuántas quedan.");
+    selfCare += 1;
+    showMonologue("Una pastilla roja... una pastilla azul... Da igual el color, el sabor amargo me recuerda que sigo atrapada en este cuerpo. ¿Esto cuenta como cuidarme? Al menos mis dientes siguen limpios.", 4600);
     bathroomPanel.classList.remove('open'); canvas.requestPointerLock();
   });
   document.getElementById('btnBathClose').addEventListener('click', ()=>{
@@ -1346,7 +1457,7 @@
     document.exitPointerLock();
   }
   document.getElementById('btnTakeBath').addEventListener('click', ()=>{
-    selfcare += 3;
+    selfCare += 3;
     showMonologue("Calor. Silencio. Unos minutos de nada. Quizás basta.");
     baneraPanel.classList.remove('open'); canvas.requestPointerLock();
   });
@@ -1397,7 +1508,10 @@
   const pcTabs = document.getElementById('pcTabs');
   let activeTab = 'plataformas';
 
+  let pendingForoMonologue = null; // se muestra al salir de la PC, no dentro del overlay (z-index)
+
   function openPC(){
+    isPcOverlayOpen = true;
     pcOverlay.classList.add('open');
     document.exitPointerLock();
     SFX.computadora();
@@ -1406,9 +1520,14 @@
   document.getElementById('pcClose').addEventListener('click', closePC);
   function closePC(){
     if(activeMinigameCleanup){ activeMinigameCleanup(); activeMinigameCleanup = null; }
+    isPcOverlayOpen = false;
     pcOverlay.classList.remove('open');
     canvas.requestPointerLock();
     if(!inBathroom) SFX.habitacion(); // detiene computadora.wav y retoma ambiente
+    if(pendingForoMonologue){
+      showMonologue(pendingForoMonologue, 4800);
+      pendingForoMonologue = null;
+    }
   }
   pcTabs.addEventListener('click', (e)=>{
     if(e.target.tagName !== 'BUTTON') return;
@@ -1484,7 +1603,7 @@
       if(!val) return;
       twtPostCount++;
       twtHistory.push({ text: val, mine: true });
-      selfcare -= 1; // publicar también tiene costo, menor que el foro
+      selfCare -= 1; // publicar también tiene costo, menor que el foro
       SFX.notificacion();
       input.value = '';
       counter.textContent = `0/${maxLen}`;
@@ -1755,7 +1874,8 @@
       const val = document.getElementById('foroInput').value.trim();
       if(!val) return;
       forumCommented = true;
-      selfcare -= 2;
+      selfCare -= 1;
+      pendingForoMonologue = "Le conté a unos desconocidos en la red cómo se siente el vacío aquí dentro... Solo se rieron. Alguien me respondió que apagara la pantalla y saliera a buscar aire. Qué estúpidos. No entienden que afuera el cielo es de un color rojo que quema.";
       const myId = foroPostCounter++;
       const repliesEl = document.getElementById('foroReplies');
       repliesEl.insertAdjacentHTML('beforeend', `
