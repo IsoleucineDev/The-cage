@@ -24,10 +24,15 @@
   }
   #sceneCanvas{ display:block; width:100%; height:100%; }
   .hud{
-    position:absolute; top:14px; left:16px; font-size:9px; color:var(--fg-dim);
+    position:absolute; top:14px; left:16px; font-size:12px; color:var(--fg-dim);
     letter-spacing:.03em; pointer-events:none; line-height:2.1; z-index:5;
   }
   .hud b{ color:var(--accent); }
+  #phoneHudHint{
+    position:absolute; top:14px; right:16px; font-size:12px; color:var(--fg-dim);
+    letter-spacing:.03em; pointer-events:none; line-height:2.1; z-index:5; text-align:right;
+  }
+  #phoneHudHint b{ color:var(--accent); }
   #startOverlay{
     position:absolute; inset:0; background:rgba(5,5,6,0.62); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -39,7 +44,7 @@
     -webkit-text-stroke:1.5px var(--purple-strong);
     text-shadow:0 0 16px rgba(176,38,255,.9), 0 0 34px rgba(176,38,255,.6), 0 0 60px rgba(176,38,255,.35);
   }
-  #startOverlay p{ font-size:9px; color:var(--fg-dim); max-width:620px; line-height:2.1; margin-bottom:18px; }
+  #startOverlay p{ font-size:12px; color:var(--fg-dim); max-width:680px; line-height:2.1; margin-bottom:18px; }
   #startOverlay .warning{
     color:#c9b8b8; border:2px solid #5a2a2a; background:rgba(60,20,20,0.18);
     padding:16px 20px; margin-bottom:22px; max-width:620px; line-height:2;
@@ -47,21 +52,21 @@
   #startOverlay .warning b{ color:#e0a0a0; }
   #startOverlay button{
     background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e;
-    padding:12px 20px; font-family:inherit; font-size:10px; cursor:pointer; letter-spacing:.02em;
+    padding:14px 22px; font-family:inherit; font-size:13px; cursor:pointer; letter-spacing:.02em;
   }
   #startOverlay button:hover{ color:var(--accent); border-color:#3a3a3e; }
-  .controls-hint{ font-size:8px; color:#3ddc61; margin-top:16px; letter-spacing:.02em; line-height:2; }
+  .controls-hint{ font-size:11px; color:#3ddc61; margin-top:16px; letter-spacing:.02em; line-height:2; }
 
   #interactPrompt{
     position:absolute; bottom:14%; left:50%; transform:translateX(-50%);
-    font-size:9px; color:var(--accent); background:rgba(10,10,12,0.6);
+    font-size:12px; color:var(--accent); background:rgba(10,10,12,0.6);
     padding:8px 12px; border:1px solid #2a2a2e; letter-spacing:.03em;
     display:none; z-index:6; pointer-events:none;
   }
 
   .monologue{
     position:absolute; bottom:20%; left:50%; transform:translateX(-50%);
-    font-size:10px; color:var(--accent); text-align:center; max-width:78%;
+    font-size:14px; color:var(--accent); text-align:center; max-width:78%;
     opacity:0; transition:opacity 1.4s ease; z-index:7; pointer-events:none; letter-spacing:.02em;
     line-height:1.9;
   }
@@ -94,10 +99,10 @@
   #bathroomPanel.open, #baneraPanel.open, #windowPanel.open, #notePanel.open{ display:flex; }
   #bathroomPanel button, #baneraPanel button, #windowPanel button, #notePanel button{
     background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e;
-    padding:16px 20px; font-family:inherit; font-size:13px; cursor:pointer; width:380px; line-height:1.8;
+    padding:17px 22px; font-family:inherit; font-size:16px; cursor:pointer; width:420px; line-height:1.8;
   }
   #bathroomPanel button:hover, #baneraPanel button:hover, #windowPanel button:hover, #notePanel button:hover{ color:var(--accent); border-color:#3a3a3e; }
-  #bathroomPanel p, #baneraPanel p, #windowPanel p, #notePanel p{ font-size:12px; color:var(--fg-dim); margin-bottom:10px; max-width:440px; text-align:center; line-height:2; }
+  #bathroomPanel p, #baneraPanel p, #windowPanel p, #notePanel p{ font-size:15px; color:var(--fg-dim); margin-bottom:10px; max-width:480px; text-align:center; line-height:2; }
 
   /* ---------- secuencia de memoria al dormir (novela visual) ---------- */
   #bedFade{
@@ -112,8 +117,8 @@
     padding:26px 30px; z-index:23; display:none; flex-direction:column; gap:14px; cursor:pointer;
   }
   #bedDialogueBox.show{ display:flex; }
-  #bedDialogueText{ font-size:11px; color:var(--accent); line-height:2; min-height:4.4em; }
-  #bedDialogueHint{ font-size:8px; color:var(--fg-dim); text-align:right; letter-spacing:.03em; opacity:0.8; }
+  #bedDialogueText{ font-size:15px; color:var(--accent); line-height:2; min-height:4.4em; }
+  #bedDialogueHint{ font-size:11px; color:var(--fg-dim); text-align:right; letter-spacing:.03em; opacity:0.8; }
   #bedDialogueHint.wake{ color:var(--accent); opacity:1; }
 
   /* ---------- pantalla de créditos (final Suicidio) ---------- */
@@ -124,12 +129,12 @@
   #creditsScreen.show{ display:flex; opacity:1; }
   .credits-inner{ text-align:center; max-width:820px; padding:40px; }
   .credits-label{
-    font-size:9px; letter-spacing:.2em; color:#8f8f96; text-transform:uppercase; margin-bottom:18px; line-height:1.8;
+    font-size:11px; letter-spacing:.2em; color:#8f8f96; text-transform:uppercase; margin-bottom:18px; line-height:1.8;
   }
-  .credits-name{ font-size:15px; letter-spacing:.04em; color:#f2f2f4; margin-bottom:12px; line-height:1.6; }
-  .credits-role{ font-size:8.5px; letter-spacing:.08em; color:#7a7a82; text-transform:uppercase; margin-bottom:38px; line-height:1.8; }
+  .credits-name{ font-size:17px; letter-spacing:.04em; color:#f2f2f4; margin-bottom:12px; line-height:1.6; }
+  .credits-role{ font-size:10.5px; letter-spacing:.08em; color:#7a7a82; text-transform:uppercase; margin-bottom:38px; line-height:1.8; }
   .credits-divider{ width:120px; height:2px; background:#3a3a3e; margin:30px auto; }
-  .credits-event{ font-size:11px; letter-spacing:.06em; color:#c9c9cf; line-height:2.2; text-transform:uppercase; }
+  .credits-event{ font-size:13px; letter-spacing:.06em; color:#c9c9cf; line-height:2.2; text-transform:uppercase; }
 
   /* ---------- pantalla final compartida (los 3 finales): gracias por jugar + título + créditos + reiniciar ---------- */
   #endScreen{
@@ -139,7 +144,7 @@
   }
   #endScreen.show{ display:flex; opacity:1; }
   .end-thanks{
-    font-family:var(--font-pixel); font-size:12px; color:#c9c9cf; letter-spacing:.2em; text-transform:uppercase;
+    font-family:var(--font-pixel); font-size:14px; color:#c9c9cf; letter-spacing:.2em; text-transform:uppercase;
   }
   .end-title{
     font-family:var(--font-crt); font-size:48px; color:var(--purple-strong); letter-spacing:.1em;
@@ -149,7 +154,7 @@
   .end-credits{ text-align:center; }
   .end-credits .credits-role{ margin-bottom:22px; }
   #btnRestart{
-    font-family:var(--font-pixel); font-size:11px; background:#1c1c1f; color:#eee;
+    font-family:var(--font-pixel); font-size:13px; background:#1c1c1f; color:#eee;
     border:2px solid var(--purple-strong); padding:14px 26px; cursor:pointer;
     box-shadow:0 0 14px rgba(176,38,255,.4);
   }
@@ -208,7 +213,7 @@
   }
   .pc-icon:hover{ border-color:#3ddc6180; background:rgba(61,220,97,0.08); }
   .pc-icon span{
-    font-family:var(--font-pixel); font-size:8px; color:#eaeaf0; text-align:center;
+    font-family:var(--font-pixel); font-size:10px; color:#eaeaf0; text-align:center;
     text-shadow:2px 2px 0 #000; line-height:1.6; word-break:break-word;
   }
   .pixel-icon{ width:64px; height:64px; position:relative; image-rendering:pixelated; flex-shrink:0; }
@@ -224,12 +229,12 @@
   #pcWindowTitlebar{
     background:linear-gradient(90deg,#1e5fd8,#17c9e8); color:#fff; border-bottom:3px solid #000;
     padding:11px 12px; display:flex; align-items:center; justify-content:space-between;
-    font-family:var(--font-pixel); font-size:9px; text-shadow:2px 2px 0 rgba(0,0,0,.5);
+    font-family:var(--font-pixel); font-size:11px; text-shadow:2px 2px 0 rgba(0,0,0,.5);
   }
   #pcWindowBtns{ display:flex; gap:6px; }
   #pcWindowBtns button{
-    width:22px; height:20px; border:2px solid #000; cursor:pointer; font-family:var(--font-pixel);
-    font-size:8px; line-height:1; box-shadow:inset -2px -2px 0 rgba(0,0,0,.4), inset 2px 2px 0 rgba(255,255,255,.5);
+    width:26px; height:24px; border:2px solid #000; cursor:pointer; font-family:var(--font-pixel);
+    font-size:10px; line-height:1; box-shadow:inset -2px -2px 0 rgba(0,0,0,.4), inset 2px 2px 0 rgba(255,255,255,.5);
   }
   .pcWinMin{ background:#ffd23f; }
   .pcWinClose{ background:#ff5a5a; color:#fff; }
@@ -239,90 +244,195 @@
   #pcContent::-webkit-scrollbar-thumb{ background:#3ddc61; border:3px solid #000; }
 
   /* twt — reskin oscuro estilo X/Twitter */
-  .twt-app{ max-width:560px; margin:0 auto; }
+  .twt-app{ max-width:620px; margin:0 auto; }
   .twt-compose{ display:flex; gap:10px; padding:4px 4px 14px; border-bottom:1px solid #2f3336; }
   .twt-avatar{ width:38px; height:38px; border-radius:50%; background:#3a3a3e; flex-shrink:0; }
   .twt-avatar.sm{ width:34px; height:34px; }
   .twt-compose-body{ flex:1; min-width:0; }
   .twt-compose textarea{
     width:100%; background:transparent; color:#e7e9ea; border:none; outline:none;
-    font-family:inherit; font-size:13px; resize:none; line-height:2; padding:6px 0;
+    font-family:inherit; font-size:15px; resize:none; line-height:2; padding:6px 0;
   }
   .twt-compose-footer{ display:flex; justify-content:flex-end; align-items:center; gap:10px; }
-  .twt-charcount{ font-size:11px; color:#71767b; }
+  .twt-charcount{ font-size:12px; color:#71767b; }
   .twt-postbtn{
     background:#1d9bf0; color:#fff; border:none; border-radius:4px;
-    padding:10px 16px; font-family:inherit; font-size:12px; cursor:pointer;
+    padding:11px 18px; font-family:inherit; font-size:14px; cursor:pointer;
   }
   .twt-postbtn:hover{ background:#1a8cd8; }
+  .twt-postbtn:disabled{ background:#0d4a70; color:#9fb8c7; cursor:not-allowed; }
   .twt-feed{ margin-top:2px; }
   .twt-post{ display:flex; gap:10px; padding:14px 4px; border-bottom:1px solid #2f3336; }
   .twt-post-body{ flex:1; min-width:0; }
-  .twt-post-head{ display:flex; gap:6px; align-items:baseline; font-size:12px; flex-wrap:wrap; row-gap:4px; }
+  .twt-post-head{ display:flex; gap:6px; align-items:baseline; font-size:14px; flex-wrap:wrap; row-gap:4px; }
   .twt-name{ color:#e7e9ea; }
   .twt-post.critic .twt-name{ color:#a08a8a; }
-  .twt-handle, .twt-time{ color:#71767b; font-size:11px; }
-  .twt-text{ color:#e7e9ea; font-size:13px; line-height:2; margin-top:6px; white-space:pre-wrap; word-break:break-word; }
-  .twt-actions{ display:flex; gap:28px; margin-top:10px; color:#71767b; font-size:11px; }
+  .twt-handle, .twt-time{ color:#71767b; font-size:12px; }
+  .twt-text{ color:#e7e9ea; font-size:15px; line-height:2; margin-top:6px; white-space:pre-wrap; word-break:break-word; }
+  .twt-actions{ display:flex; gap:28px; margin-top:10px; color:#71767b; font-size:12px; }
   .twt-actions span{ display:flex; align-items:center; gap:5px; }
   .twt-actions svg{ width:16px; height:16px; fill:currentColor; }
-  .twt-empty{ text-align:center; color:#71767b; font-size:12px; padding:30px 0; line-height:1.8; }
+  .twt-empty{ text-align:center; color:#71767b; font-size:13px; padding:30px 0; line-height:1.8; }
+  .twt-hint{ font-size:11.5px; color:#71767b; margin:8px 4px 0; }
 
   /* foro — reskin oscuro estilo imageboard (2chan/4chan) */
-  .foro-board{ max-width:720px; margin:0 auto; }
+  .foro-board{ max-width:760px; margin:0 auto; }
+  .foro-hint{ font-size:11.5px; color:#5a5a60; margin-bottom:12px; }
   .foro-thread-card{
     border:1px solid #222225; background:#0e0e10; margin-bottom:10px; padding:14px 16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:space-between; gap:10px; transition:background .1s ease;
   }
-  .foro-thread-card:hover{ border-color:#3a3a3e; }
-  .foro-thread-card .fh{ font-size:11px; color:#5a8a3a; margin-bottom:10px; line-height:1.6; }
-  .foro-thread-card .ft{ font-size:13px; color:var(--accent); margin-bottom:10px; line-height:1.6; }
-  .foro-thread-card .fp{ font-size:12px; color:var(--fg-dim); line-height:1.9; }
-  .foro-thread-card .freplies{ font-size:11px; color:#5a5a60; margin-top:10px; }
-  .foro-post{ border:1px solid #222225; background:#0e0e10; padding:14px 16px; margin-bottom:8px; font-size:12px; }
+  .foro-thread-card:hover{ border-color:#3ddc6180; background:rgba(61,220,97,0.05); }
+  .foro-thread-card .fcard-main{ flex:1; min-width:0; }
+  .foro-thread-card .fchevron{ color:#3ddc61; font-size:16px; flex-shrink:0; opacity:.75; }
+  .foro-thread-card .fh{ font-size:12.5px; color:#5a8a3a; margin-bottom:10px; line-height:1.6; }
+  .foro-thread-card .ft{ font-size:15px; color:var(--accent); margin-bottom:10px; line-height:1.6; }
+  .foro-thread-card .fp{ font-size:13.5px; color:var(--fg-dim); line-height:1.9; }
+  .foro-thread-card .freplies{ font-size:12px; color:#5a5a60; margin-top:10px; }
+  .foro-post{ border:1px solid #222225; background:#0e0e10; padding:14px 16px; margin-bottom:8px; font-size:13.5px; }
   .foro-post.op{ border-color:#3a3a3e; }
-  .foro-post .fhead{ font-size:11px; color:#71767b; margin-bottom:10px; line-height:1.6; }
+  .foro-post .fhead{ font-size:12px; color:#71767b; margin-bottom:10px; line-height:1.6; }
   .foro-post .fhead b{ color:#8ba86a; }
   .foro-post .fno{ color:#5a5a60; }
-  .foro-body-text{ line-height:2.1; font-size:12px; }
+  .foro-body-text{ line-height:2.1; font-size:13.5px; }
   .fquote{ color:#7a92c4; }
   .greentext{ color:#8fbf5f; }
   .foro-replies{ margin-top:10px; padding-left:14px; border-left:1px solid #222225; }
   .foro-back{
-    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:10px 16px;
-    font-family:inherit; font-size:11px; cursor:pointer; margin-bottom:12px;
+    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:11px 18px;
+    font-family:inherit; font-size:13px; cursor:pointer; margin-bottom:12px;
   }
+  .foro-back:hover{ color:#3ddc61; border-color:#3ddc6180; }
   .foro-comment-box{ margin-top:14px; }
+  .foro-comment-hint{ font-size:11.5px; color:#5a5a60; margin-bottom:6px; }
   .foro-comment-box textarea{
     width:100%; background:#111113; color:var(--fg); border:1px solid #2a2a2e;
-    font-family:inherit; font-size:12px; line-height:1.9; padding:10px; resize:none;
+    font-family:inherit; font-size:14px; line-height:1.9; padding:10px; resize:none;
   }
   .foro-comment-box button{
     margin-top:8px; background:#1c1c1f; color:#a08a8a; border:1px solid #3a2a2a;
-    padding:10px 16px; font-family:inherit; font-size:11px; cursor:pointer;
+    padding:11px 18px; font-family:inherit; font-size:13px; cursor:pointer;
   }
+  .foro-comment-box button:hover:not(:disabled){ color:#c9a0a0; border-color:#5a2a2a; }
+  .foro-comment-box button:disabled{ opacity:.4; cursor:not-allowed; }
 
   /* rpg */
   .rpg-box{ max-width:560px; margin:0 auto; text-align:center; }
   #rpgCanvas{ display:block; margin:0 auto; background:#111013; border:1px solid #2a2a2e; }
-  .rpg-hint{ font-size:11px; color:var(--fg-dim); margin:12px 0 14px; line-height:1.8; }
+  .rpg-hint{ font-size:13px; color:var(--fg-dim); margin:12px 0 14px; line-height:1.8; }
   .rpg-dialogue{
-    border:1px solid #2a2a2e; padding:16px; font-size:13px; line-height:2; min-height:60px; margin-bottom:14px;
+    border:1px solid #2a2a2e; padding:16px; font-size:15px; line-height:2; min-height:60px; margin-bottom:14px;
   }
   .rpg-box button{
-    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:11px 16px;
-    font-family:inherit; font-size:11px; cursor:pointer; margin:4px; line-height:1.6;
+    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:12px 18px;
+    font-family:inherit; font-size:13px; cursor:pointer; margin:4px; line-height:1.6;
   }
   .rpg-choices{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
 
   /* plataformas */
   #platCanvas{ display:block; margin:0 auto; background:#0c0c0e; border:1px solid #2a2a2e; }
-  .plat-hint{ text-align:center; font-size:11px; color:var(--fg-dim); margin-top:12px; line-height:1.8; }
+  .plat-hint{ text-align:center; font-size:13px; color:var(--fg-dim); margin-top:12px; line-height:1.8; }
   .plat-hint span{ color:var(--accent); }
   #platRetry{
     background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e;
-    padding:10px 16px; font-family:inherit; font-size:12px; cursor:pointer;
+    padding:11px 18px; font-family:inherit; font-size:14px; cursor:pointer;
   }
   #platRetry:hover{ color:var(--accent); border-color:#3a3a3e; }
+
+  /* ---------- celular: mensajes de amigos que nunca contestas ---------- */
+  #phonePanel{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    background:rgba(5,5,6,0.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    z-index:30; flex-direction:column;
+  }
+  #phonePanel.open{ display:flex; }
+  #phoneContent{
+    width:min(480px,90%); max-height:78vh; overflow-y:auto;
+    background:#141417; border:2px solid #2a2a2e; box-shadow:0 0 0 6px #000, 8px 8px 0 rgba(0,0,0,.4);
+    padding:22px;
+  }
+  #phoneContent::-webkit-scrollbar{ width:14px; }
+  #phoneContent::-webkit-scrollbar-track{ background:#1a1a1a; border-left:2px solid #000; }
+  #phoneContent::-webkit-scrollbar-thumb{ background:#3ddc61; border:2px solid #000; }
+  .phone-header{ font-size:14px; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+  .phone-hint{ font-size:11.5px; color:#5a5a60; margin-bottom:16px; line-height:1.8; }
+  .phone-contacts{ display:flex; flex-direction:column; gap:10px; }
+  .phone-contact{
+    display:flex; align-items:center; gap:14px; padding:10px; border:1px solid #222225; cursor:pointer;
+    transition:background .1s ease;
+  }
+  .phone-contact:hover{ border-color:#3ddc6180; background:rgba(61,220,97,0.06); }
+  .phone-avatar{ width:44px; height:44px; position:relative; image-rendering:pixelated; flex-shrink:0; }
+  .phone-avatar.lg{ width:56px; height:56px; }
+  .phone-avatar i{ position:absolute; width:8px; height:8px; top:0; left:0; }
+  .phone-contact-body{ flex:1; min-width:0; }
+  .phone-contact-top{ display:flex; align-items:center; gap:8px; }
+  .phone-contact-name{ font-size:14px; color:var(--fg); }
+  .phone-badge{ background:#e8394a; color:#fff; font-size:10px; padding:2px 7px; border-radius:10px; line-height:1.4; }
+  .phone-contact-preview{ font-size:12px; color:#8a8a92; margin-top:5px; line-height:1.6; }
+  .phone-contact-preview.empty{ color:#4a4a50; font-style:italic; }
+  .phone-close{
+    margin-top:18px; width:100%; background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e;
+    padding:13px 16px; font-family:inherit; font-size:13px; cursor:pointer;
+  }
+  .phone-close:hover{ color:var(--accent); border-color:#3a3a3e; }
+  .phone-back{
+    background:#1c1c1f; color:var(--fg); border:1px solid #2a2a2e; padding:11px 16px;
+    font-family:inherit; font-size:12px; cursor:pointer; margin-bottom:16px;
+  }
+  .phone-back:hover{ color:#3ddc61; border-color:#3ddc6180; }
+  .phone-thread-header{ display:flex; align-items:center; gap:14px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid #222225; }
+  .phone-thread-name{ font-size:15px; color:var(--accent); }
+  .phone-messages{ display:flex; flex-direction:column; gap:8px; }
+  .phone-day-divider{
+    text-align:center; font-size:10.5px; color:#5a5a60; letter-spacing:.15em; text-transform:uppercase;
+    margin:14px 0 6px;
+  }
+  .phone-bubble{
+    align-self:flex-start; max-width:80%; background:#232327; color:var(--fg);
+    padding:10px 14px; font-size:13.5px; line-height:1.9; border-radius:2px;
+  }
+  .phone-silence{ text-align:center; font-size:12px; color:#5a5a60; font-style:italic; margin-top:18px; }
+  .phone-jump{
+    position:absolute; bottom:calc(11vh + 14px); left:50%; transform:translateX(-50%);
+    background:#1c1c1f; color:var(--accent); border:1px solid #3ddc6180;
+    padding:9px 16px; font-family:inherit; font-size:11.5px; cursor:pointer;
+    box-shadow:0 4px 0 rgba(0,0,0,.4); display:none;
+  }
+  .phone-jump.show{ display:block; }
+  .phone-jump:hover{ background:rgba(61,220,97,0.12); }
+
+  /* ---------- post-it de tareas en la pared ---------- */
+  #tasksPanel{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    background:rgba(5,5,6,0.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    z-index:30; flex-direction:column;
+  }
+  #tasksPanel.open{ display:flex; }
+  #tasksContent{
+    width:min(400px,88%); max-height:78vh; overflow-y:auto;
+    background:#e8dd8a; color:#2a2510; border:1px solid #c9bd68;
+    box-shadow:0 0 0 6px #000, 10px 12px 22px rgba(0,0,0,.5);
+    padding:26px 24px 20px; transform:rotate(-0.6deg);
+    font-family:inherit;
+  }
+  #tasksContent::-webkit-scrollbar{ width:14px; }
+  #tasksContent::-webkit-scrollbar-track{ background:#c9bd68; }
+  #tasksContent::-webkit-scrollbar-thumb{ background:#8a7f3a; border:2px solid #6b6128; }
+  .tasks-title{ font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:#5a5020; margin-bottom:18px; text-align:center; }
+  .tasks-list{ display:flex; flex-direction:column; gap:14px; }
+  .task-row{ font-size:13.5px; line-height:1.9; display:flex; gap:10px; align-items:flex-start; opacity:1; transition:opacity .3s ease; }
+  .task-row .task-check{ flex-shrink:0; }
+  .task-row.state-done{ opacity:1; }
+  .task-row.state-pending{ opacity:0.92; }
+  .task-row.state-faded{ opacity:0.45; }
+  .task-row.state-redacted{ opacity:0.32; }
+  .task-row.state-forgotten{ opacity:0.55; font-style:italic; color:#6b6128; }
+  .tasks-close{
+    margin-top:20px; width:100%; background:#d8cb72; color:#2a2510; border:1px solid #8a7f3a;
+    padding:12px 16px; font-family:inherit; font-size:12px; cursor:pointer;
+  }
+  .tasks-close:hover{ background:#c9bd68; }
 
   /* grain overlay */
   #grain-overlay{
@@ -355,6 +465,7 @@
     <canvas id="sceneCanvas"></canvas>
     <div id="grain-overlay"></div>
     <div class="hud">fase: <b id="phaseLabel">día 1</b></div>
+    <div id="phoneHudHint">[<b>U</b>] celular</div>
     <div id="interactPrompt"></div>
     <div class="monologue" id="monologue"></div>
     <div id="timeSkipCaption"></div>
@@ -419,6 +530,15 @@
       <p>&gt; una nota bajo la puerta</p>
       <p id="noteText" style="font-style:italic; color:var(--accent); max-width:440px;"></p>
       <button id="btnNoteSave">guardar</button>
+    </div>
+
+    <div id="phonePanel">
+      <div id="phoneContent"></div>
+      <button id="phoneJump" class="phone-jump">↓ Ir al mensaje nuevo</button>
+    </div>
+
+    <div id="tasksPanel">
+      <div id="tasksContent"></div>
     </div>
 
     <div id="pcOverlay">
@@ -626,6 +746,11 @@
     },
     teclado(){     playOne('teclado', 0.35, false); }, // foley corto
     notificacion(){ tone(900, 0.15, 'sine', 0.03); },
+    tareaTick(){ tone(700, 0.12, 'sine', 0.025); },
+    phoneChime(){ tone(660, 0.18, 'sine', 0.028); tone(880, 0.22, 'sine', 0.02, 0.06); },
+    phoneTap(){ tone(520, 0.06, 'sine', 0.02); },
+    phoneWhoosh(){ tone(260, 0.22, 'sine', 0.02); tone(480, 0.18, 'sine', 0.015, 0.05); },
+    phonePop(){ tone(780, 0.08, 'sine', 0.022); tone(1020, 0.06, 'sine', 0.016, 0.045); },
   };
 
   // ============================================================
@@ -752,6 +877,10 @@
   const ceilMat  = new THREE.MeshStandardMaterial({ color: 0x0c0c0d, roughness: 1, flatShading:true });
   const furnMat  = new THREE.MeshStandardMaterial({ color: 0x28282c, roughness: 1, flatShading:true });
   const doorMat  = new THREE.MeshStandardMaterial({ color: 0x3a3a3e, roughness: 0.8, flatShading:true, emissive:0x1a1a1e, emissiveIntensity:0.3 });
+  const doorColdColor = new THREE.Color(0x3a3a3e);
+  const doorHopeColor = new THREE.Color(0x2f6b46);
+  const doorColdEmissive = new THREE.Color(0x1a1a1e);
+  const doorHopeEmissive = new THREE.Color(0x1a5a32);
   const monitorScreenMat = new THREE.MeshStandardMaterial({ color: 0x0a1220, roughness:0.3, emissive:0xffffff, emissiveMap: makeTetrisTexture(), emissiveIntensity:1.5 });
   const sinkMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1e, roughness:0.6, flatShading:true });
   const woodMat = new THREE.MeshStandardMaterial({ color:0xffffff, map: makeWoodTexture('#3a2a1e','#1a1109'), roughness:0.7, metalness:0.05 });
@@ -790,6 +919,11 @@
   const doorNoteMat = new THREE.MeshStandardMaterial({ color:0xe8e2d0, roughness:1, flatShading:true });
   const doorNoteMesh = box(0.20, 0.006, 0.26, doorNoteMat, 0, 0.063, 2.05);
   doorNoteMesh.rotation.y = 0.18;
+
+  // post-it de tareas — pegado en la pared trasera, junto a la ventana
+  const postItMat = new THREE.MeshStandardMaterial({ color:0xe8d94a, roughness:0.95, flatShading:true, emissive:0x4a4210, emissiveIntensity:0.15 });
+  const postItMesh = box(0.22, 0.24, 0.006, postItMat, 1.05, 1.35, -2.435);
+  postItMesh.rotation.z = -0.05;
 
   // cama más larga
   const cobijaMat = new THREE.MeshStandardMaterial({ color:0x22222a, roughness:1, flatShading:true });
@@ -1362,6 +1496,7 @@
     initAudioElements();
     canvas.requestPointerLock();
     SFX.habitacion();
+    scheduleNextThought();
   });
   document.addEventListener('pointerlockchange', ()=>{
     pointerLocked = document.pointerLockElement === canvas;
@@ -1376,6 +1511,7 @@
   window.addEventListener('keydown', e=>{
     keys[e.key.toLowerCase()]=true;
     if(e.key.toLowerCase()==='e') tryInteract();
+    if(e.key.toLowerCase()==='u' && !anyPanelOpen()) openPhonePanel();
   });
   window.addEventListener('keyup', e=>{ keys[e.key.toLowerCase()]=false; });
 
@@ -1385,6 +1521,8 @@
            document.getElementById('baneraPanel').classList.contains('open') ||
            document.getElementById('windowPanel').classList.contains('open') ||
            document.getElementById('notePanel').classList.contains('open') ||
+           document.getElementById('phonePanel').classList.contains('open') ||
+           document.getElementById('tasksPanel').classList.contains('open') ||
            bedSeqActive ||
            endingSequenceActive;
   }
@@ -1392,7 +1530,7 @@
   // blur canvas when any choice panel is open
   (function(){
     const _canvas = document.getElementById('sceneCanvas');
-    const _panelIds = ['bathroomPanel','baneraPanel','windowPanel','notePanel'];
+    const _panelIds = ['bathroomPanel','baneraPanel','windowPanel','notePanel','phonePanel','tasksPanel'];
     const _obs = new MutationObserver(()=>{
       const open = _panelIds.some(id => document.getElementById(id).classList.contains('open'));
       _canvas.classList.toggle('blurred', open);
@@ -1408,6 +1546,7 @@
   let phaseIndex = 0;
   let currentPhase = PHASE_KEYS[0]; // espejo legible de phaseIndex, progresa junto con él
   let selfCare = 0; // stat oculto, nunca mostrado en UI
+  let doorGlowCurrent = 0; // 0..1, avanza suavemente hacia doorGlowTarget cada frame — nunca salta
   let forumCommented = false;
   let isPcOverlayOpen = false; // espejo de pcOverlay.classList('open')
   let degradation = 0;
@@ -1416,6 +1555,21 @@
   let bathedThisPhase = false; // se reinicia cada fase — ¿ya te bañaste en este ciclo?
   let brushedThisPhase = false; // se reinicia cada fase — ¿ya te cepillaste los dientes en este ciclo?
   let pillsTakenEver = false; // persiste entre fases — ¿alguna vez tomaste la pastilla?
+  // ---------- lista de tareas (post-it) ----------
+  let momCalledThisPhase = false;   // se marca al abrir el chat de mamá en el celular
+  let ateThisPhase = false;         // autorreporte en el post-it
+  let plantWateredThisPhase = false; // autorreporte en el post-it
+  let sleptEarlyThisPhase = false;   // autorreporte en el post-it
+  const TASKS = [
+    { id:'pills',   label:'Tomar las pastillas',       isDone:()=>pillsTakenCountThisPhase>0, manual:false },
+    { id:'teeth',   label:'Cepillarme los dientes',    isDone:()=>brushedThisPhase,           manual:false },
+    { id:'bath',    label:'Bañarme',                   isDone:()=>bathedThisPhase,            manual:false },
+    { id:'callMom', label:'Llamar a mamá',             isDone:()=>momCalledThisPhase,         manual:false },
+    { id:'eat',     label:'Comer',                     isDone:()=>ateThisPhase,               manual:true  },
+    { id:'plant',   label:'Regar la planta',           isDone:()=>plantWateredThisPhase,      manual:true  },
+    { id:'sleep',   label:'Dormir temprano',           isDone:()=>sleptEarlyThisPhase,        manual:true  },
+  ];
+  const taskNeglect = { pills:0, teeth:0, bath:0, callMom:0, eat:0, plant:0, sleep:0 };
   let pillsTakenCountThisPhase = 0; // se reinicia cada fase — tomar de más tiembla la cámara y cambia el color de la luz
   let trashCleanedThisPhase = false; // se reinicia cada fase — limpiar la basura suma selfCare una vez por ciclo
 
@@ -1490,6 +1644,9 @@
 
   function advancePhase(){
     if(phaseIndex >= PHASES.length - 1) return; // ya en disolución
+    TASKS.forEach(t=>{
+      taskNeglect[t.id] = t.isDone() ? 0 : Math.min(taskNeglect[t.id] + 1, 4);
+    });
     phaseIndex++;
     currentPhase = PHASE_KEYS[phaseIndex];
     bathedThisPhase = false;
@@ -1497,6 +1654,10 @@
     pillsTakenCountThisPhase = 0;
     trashCleanedThisPhase = false;
     pcCleanUseGrantedThisPhase = false;
+    momCalledThisPhase = false;
+    ateThisPhase = false;
+    plantWateredThisPhase = false;
+    sleptEarlyThisPhase = false;
     setRoomMoodColor('violeta'); // dormir siempre devuelve la luz a la normalidad
     applyRoomSetDressing();
     degradation = Math.min(degradation + 0.22, 0.9);
@@ -1668,6 +1829,8 @@
     { name:'bath-tub',  x:BX-0.60, z:BZ+0.90, r:1.1,  label:'[E] bañera',               room:'bath' },
     { name:'recognition', x:-2.35, z:-1.6,   r:0.7,  label:'[E] ver el reconocimiento', room:'main' },
     { name:'doorNote',  x:0,        z:2.05,    r:0.6,  label:'[E] leer la nota',          room:'main' },
+    { name:'postit',    x:1.05,    z:-2.435,  r:0.6,  label:'[E] ver la lista',         room:'main' },
+    /* el celular ya no es un objeto 3D — ver openPhonePanel(), atado a la tecla [U] */
   ];
   let currentHotspot = null;
 
@@ -1710,6 +1873,7 @@
     if(currentHotspot.name === 'recognition') viewRecognition();
     if(currentHotspot.name === 'trash')     cleanTrash();
     if(currentHotspot.name === 'doorNote')  openNotePanel();
+    if(currentHotspot.name === 'postit')    openTasksPanel();
   }
 
   // ---------- limpiar la basura tirada: pequeño gesto de autocuidado ----------
@@ -1988,6 +2152,179 @@
   });
 
   // ---------- nota bajo la puerta (de mamá) — una por fase ----------
+  // ============================================================
+  // CELULAR — app de mensajes (contactos con personalidad propia)
+  // ============================================================
+  const PHONE_CONTACTS = [
+    { id:'mama',    name:'Mamá',                   kind:'dm',    icon:'heart',  palette:{h:'#e8394a'} },
+    { id:'familia', name:'Familia',                kind:'group', icon:'house',  palette:{h:'#d4af37', w:'#8a5a2a'} },
+    { id:'lucia',   name:'Lu',                      kind:'dm',    icon:'star',   palette:{h:'#e864b0'} },
+    { id:'diego',   name:'Nick',                    kind:'dm',    icon:'cap',    palette:{h:'#4a8ad8', w:'#c9c9cf'} },
+    { id:'carmen',  name:'Tía',                     kind:'dm',    icon:'flower', palette:{h:'#c9628a', w:'#5a9a5a'} },
+    { id:'sofi',    name:'Alex',                    kind:'dm',    icon:'sparkle',palette:{h:'#e8d23f'} },
+  ];
+  const PHONE_ICON_ROWS = {
+    heart:   ['..k.k..','.kwwwk.','kwwwwwk','kwwwwwk','.kwwwk.','..kwk..','...k...','.......'],
+    house:   ['...k...','..kwk..','.kwwwk.','kwwwwwk','.kwwwk.','.k.k.k.','.k...k.','.kkkkk.'],
+    star:    ['...k...','..kwk..','.kwwwk.','kwwwwwk','.kwwwk.','..k.k..','.k...k.','.......'],
+    cap:     ['.kkkkk.','kwwwwwk','kwwwwwk','.kkkkk.','..kkk..','.......','.......','.......'],
+    flower:  ['.k...k.','kwkkkwk','.kwww k','wwkkkww','.kwww.k','kwkkkwk','.k...k.','..kkk..'],
+    sparkle: ['.k...k.','..k.k..','...k...','k..k..k','...k...','..k.k..','.k...k.','.......'],
+  };
+  // días de fase visibles en las burbujas del hilo
+  const PHONE_DAY_LABEL = ['día 1','semana','mes','año','disolución'];
+  const PHONE_MESSAGES = {
+    mama: [
+      ['¿Ya comiste?', 'No olvides tus medicinas ❤️'],
+      ['¿Estás bien? no me has contestado', 'Llámame cuando puedas.'],
+      ['Hace días que no sé de ti.', 'Por favor contéstame aunque sea un mensaje.'],
+      ['¿Sigues ahí? Solo dime que estás bien.', 'No olvides tus medicinas ❤️'],
+      ['Ya no sé qué más escribirte.', 'Aquí sigo. Te quiero.'],
+    ],
+    familia: [
+      ['📷 [foto de la reunión del domingo]', '¡Feliz cumpleaños tía Meche! 🎉'],
+      ['¿alguien tiene la receta del mole de la abuela?', 'recuerden: domingo comida en casa de tía Carmen'],
+      ['📷 [foto de las posadas]', 'no olviden el regalo del intercambio'],
+      ['📷 [foto del cumpleaños de mi primo]', 'hace tiempo que no sabemos de ti, primo'],
+      ['📷 [foto familiar]', 'seguimos aquí para cuando quieras hablar'],
+    ],
+    lucia: [
+      ['jajaja viste el meme que te mandé', '¿salimos el finde?'],
+      ['¿todo bien? no contestaste lo del finde', 'te mando otro meme a ver si esta vez sí 😂'],
+      ['¿dónde andas? ya ni contestas'],
+      [],
+      [],
+    ],
+    diego: [
+      ['oye, ¿viste el partido de ayer?', 'nos vemos el lunes'],
+      ['¿todo bien? no has estado en el grupo'],
+      [],
+      [],
+      [],
+    ],
+    carmen: [
+      ['comentó tu foto: "qué guapo mi sobrino ❤️"', 'saludos, cuídate mucho'],
+      ['¿cómo va todo? tu mamá dice que casi no contestas'],
+      [],
+      [],
+      [],
+    ],
+    sofi: [
+      ['subió una historia ✨', 'respondió tu historia con 😂😂😂'],
+      ['¿todo bien? ya casi no publicas nada'],
+      [],
+      [],
+      [],
+    ],
+  };
+  const phoneLastChecked = { mama:-1, familia:-1, lucia:-1, diego:-1, carmen:-1, sofi:-1 };
+  function phoneVisibleMessages(contactId){
+    const days = PHONE_MESSAGES[contactId];
+    const out = [];
+    for(let p=0; p<=Math.min(phaseIndex, days.length-1); p++){
+      if(days[p] && days[p].length) out.push({ phase:p, texts:days[p] });
+    }
+    return out;
+  }
+  function phoneUnreadCount(contactId){
+    const visible = phoneVisibleMessages(contactId);
+    const unseen = visible.filter(d => d.phase > phoneLastChecked[contactId]);
+    return unseen.reduce((n,d)=> n + d.texts.length, 0);
+  }
+  function phonePreviewText(contactId){
+    const visible = phoneVisibleMessages(contactId);
+    if(!visible.length) return null;
+    const last = visible[visible.length-1];
+    return last.texts[last.texts.length-1];
+  }
+  function paintPhoneAvatar(container, iconKey, palette){
+    const rows = PHONE_ICON_ROWS[iconKey];
+    const p = Object.assign({ k:'#0a0a0c', w:'#c9c9cf' }, { h: palette.h }, palette.w ? { w: palette.w } : {});
+    const el = document.createElement('i');
+    el.style.boxShadow = pixelArt(rows, p, 5.5);
+    container.appendChild(el);
+  }
+  function renderPhoneContacts(){
+    const content = document.getElementById('phoneContent');
+    document.getElementById('phoneJump').classList.remove('show');
+    const rows = PHONE_CONTACTS.map(c=>{
+      const unread = phoneUnreadCount(c.id);
+      const preview = phonePreviewText(c.id);
+      return `<div class="phone-contact" data-contact="${c.id}">
+        <div class="phone-avatar" data-avatar="${c.id}"></div>
+        <div class="phone-contact-body">
+          <div class="phone-contact-top">
+            <span class="phone-contact-name">${c.name}</span>
+            ${unread > 0 ? `<span class="phone-badge">${unread}</span>` : ''}
+          </div>
+          <div class="phone-contact-preview${preview ? '' : ' empty'}">${preview ? preview : 'sin mensajes nuevos'}</div>
+        </div>
+      </div>`;
+    }).join('');
+    content.innerHTML = `
+      <div class="phone-header">mensajes</div>
+      <div class="phone-hint">deslizar para ver conversaciones</div>
+      <div class="phone-contacts">${rows}</div>
+      <button class="phone-close" id="phoneCloseBtn">bloquear celular</button>`;
+    PHONE_CONTACTS.forEach(c=>{
+      paintPhoneAvatar(content.querySelector(`[data-avatar="${c.id}"]`), c.icon, c.palette);
+    });
+    content.querySelectorAll('[data-contact]').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        SFX.phoneTap();
+        openPhoneThread(el.getAttribute('data-contact'));
+      });
+    });
+    document.getElementById('phoneCloseBtn').addEventListener('click', closePhonePanel);
+  }
+  function openPhoneThread(contactId){
+    const contact = PHONE_CONTACTS.find(c=>c.id===contactId);
+    const visible = phoneVisibleMessages(contactId);
+    const wasUnread = phoneUnreadCount(contactId) > 0;
+    if(contactId === 'mama') momCalledThisPhase = true;
+    phoneLastChecked[contactId] = phaseIndex;
+    const content = document.getElementById('phoneContent');
+    let bubbles = '';
+    visible.forEach(day=>{
+      bubbles += `<div class="phone-day-divider">${PHONE_DAY_LABEL[day.phase]}</div>`;
+      day.texts.forEach(t=>{ bubbles += `<div class="phone-bubble">${t}</div>`; });
+    });
+    if(!visible.length || visible[visible.length-1].phase < phaseIndex - 1){
+      bubbles += `<div class="phone-silence">${visible.length ? 'ya no ha escrito nada más.' : 'todavía no hay ninguna conversación aquí.'}</div>`;
+    }
+    content.innerHTML = `
+      <button class="phone-back" id="phoneBackBtn">&larr; volver</button>
+      <div class="phone-thread-header">
+        <div class="phone-avatar lg" id="phoneThreadAvatar"></div>
+        <span class="phone-thread-name">${contact.name}</span>
+      </div>
+      <div class="phone-messages" id="phoneMessages">${bubbles}</div>`;
+    paintPhoneAvatar(document.getElementById('phoneThreadAvatar'), contact.icon, contact.palette);
+    document.getElementById('phoneBackBtn').addEventListener('click', ()=>{ SFX.phoneTap(); renderPhoneContacts(); });
+    if(contactId === 'mama') SFX.phoneWhoosh(); // "llamar a mamá" — el único gesto de alcance real
+    const msgsEl = document.getElementById('phoneMessages');
+    msgsEl.scrollTop = msgsEl.scrollHeight; // auto-scroll al mensaje más reciente
+    const jumpBtn = document.getElementById('phoneJump');
+    jumpBtn.classList.remove('show');
+    msgsEl.addEventListener('scroll', ()=>{
+      const atBottom = msgsEl.scrollHeight - msgsEl.scrollTop - msgsEl.clientHeight < 24;
+      jumpBtn.classList.toggle('show', !atBottom);
+    });
+    jumpBtn.onclick = ()=> msgsEl.scrollTo({ top: msgsEl.scrollHeight, behavior:'smooth' });
+    if(wasUnread) SFX.phonePop();
+  }
+  function openPhonePanel(){
+    SFX.phoneChime();
+    renderPhoneContacts();
+    document.getElementById('phonePanel').classList.add('open');
+    document.exitPointerLock();
+  }
+  function closePhonePanel(){
+    document.getElementById('phoneJump').classList.remove('show');
+    document.getElementById('phonePanel').classList.remove('open');
+    canvas.requestPointerLock();
+  }
+
   const DOOR_NOTES = [
     { note: "Te esperamos abajo para que vengas a cenar.\nVerás que todo mejorará.\nCon cariño, mamá <3",
       reaction: "¿Con qué cara puedo ir con ellos y cenar como si nada?" },
@@ -2009,6 +2346,117 @@
     notePanel.classList.remove('open'); canvas.requestPointerLock();
     if(entry.reaction) showMonologue(entry.reaction);
   });
+
+  // ---------- post-it de tareas: lista que se deteriora con el olvido ----------
+  function taskCharHash(seed, i){
+    let h = 0;
+    for(let k=0;k<seed.length;k++) h = (h*31 + seed.charCodeAt(k) + i*7) | 0;
+    return Math.abs(h);
+  }
+  function redactText(text, seed){
+    return [...text].map((ch,i)=>{
+      if(ch === ' ') return ch;
+      return (taskCharHash(seed, i) % 5 === 0) ? ' ' : ch;
+    }).join('');
+  }
+  function taskState(t){
+    if(t.isDone()) return 'done';
+    const n = taskNeglect[t.id];
+    if(n <= 0) return 'pending';
+    if(n === 1) return 'faded';
+    if(n === 2) return 'redacted';
+    if(n === 3) return 'hidden';
+    return 'forgotten';
+  }
+  function renderTasksPanel(){
+    const rows = TASKS.map(t=>{
+      const state = taskState(t);
+      if(state === 'hidden') return '';
+      let label = t.label;
+      if(state === 'forgotten') label = 'He olvidado qué tenía que hacer...';
+      else if(state === 'redacted') label = redactText(t.label, t.id);
+      const mark = state === 'done' ? '✔' : (state === 'forgotten' ? '·' : '☐');
+      const clickable = t.manual && state !== 'done' && state !== 'forgotten';
+      return `<div class="task-row state-${state}"${clickable ? ` data-task="${t.id}" style="cursor:pointer"` : ''}><span class="task-check">${mark}</span><span>${label}</span></div>`;
+    }).join('');
+    const content = document.getElementById('tasksContent');
+    content.innerHTML = `<div class="tasks-title">— pendientes —</div><div class="tasks-list">${rows}</div><button class="tasks-close" id="btnTasksClose">cerrar</button>`;
+    content.querySelectorAll('[data-task]').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const id = el.getAttribute('data-task');
+        if(id === 'eat')   ateThisPhase = true;
+        if(id === 'plant') plantWateredThisPhase = true;
+        if(id === 'sleep') sleptEarlyThisPhase = true;
+        SFX.tareaTick();
+        renderTasksPanel();
+      });
+    });
+    document.getElementById('btnTasksClose').addEventListener('click', closeTasksPanel);
+  }
+  function openTasksPanel(){
+    renderTasksPanel();
+    document.getElementById('tasksPanel').classList.add('open');
+    document.exitPointerLock();
+  }
+  function closeTasksPanel(){
+    document.getElementById('tasksPanel').classList.remove('open');
+    canvas.requestPointerLock();
+  }
+
+  // ---------- post-it de tareas: brillo pulsante para que se note en la pared ----------
+  function updatePostItGlow(now){
+    postItMat.emissiveIntensity = 0.35 + Math.sin(now * 0.0018) * 0.18;
+  }
+
+  // ---------- la puerta como indicador del estado mental: brillo verde sutil y gradual ----------
+  function updateDoorGlow(dt){
+    const doneCount = TASKS.filter(t=>t.isDone()).length;
+    const selfCareNorm = Math.max(0, Math.min(1, selfCare / 5));
+    const taskNorm = doneCount / TASKS.length;
+    const target = Math.max(0, Math.min(1, 0.5*selfCareNorm + 0.5*taskNorm));
+    const step = dt * 0.06; // avance lento, nunca abrupto
+    if(doorGlowCurrent < target) doorGlowCurrent = Math.min(target, doorGlowCurrent + step);
+    else if(doorGlowCurrent > target) doorGlowCurrent = Math.max(target, doorGlowCurrent - step);
+    doorMat.color.lerpColors(doorColdColor, doorHopeColor, doorGlowCurrent);
+    doorMat.emissive.lerpColors(doorColdEmissive, doorHopeEmissive, doorGlowCurrent);
+    doorMat.emissiveIntensity = 0.3 + doorGlowCurrent * 0.35;
+  }
+
+  // ---------- pensamientos aleatorios: espontáneos, ligados al deterioro de la memoria ----------
+  const THOUGHTS = [
+    { text:"¿Ya tomé mis pastillas?",                confused:false },
+    { text:"Creo que debía tomar unas pastillas...", confused:false },
+    { text:"He olvidado algo importante.",           confused:true  },
+    { text:"Mi boca no huele muy bien...",           confused:false },
+    { text:"Creo que necesito bañarme.",             confused:false },
+    { text:"¿Ya comí hoy?",                          confused:false },
+    { text:"Siento que se me está olvidando algo.",  confused:true  },
+    { text:"No recuerdo qué iba a hacer.",           confused:true  },
+    { text:"¿Mi mamá me escribió?",                  confused:false },
+    { text:"¿Qué día es hoy?",                       confused:true  },
+    { text:"Estoy seguro de que había una tarea...", confused:true  },
+    { text:"Todo se siente confuso.",                confused:true  },
+  ];
+  let lastThoughtText = null;
+  function pickThought(){
+    const decline = Math.max(0, Math.min(1, degradation));
+    const repeatChance = 0.1 + decline*0.45;
+    if(lastThoughtText && Math.random() < repeatChance) return lastThoughtText;
+    const wantConfused = Math.random() < (0.25 + decline*0.55);
+    const pool = THOUGHTS.filter(t => t.confused === wantConfused);
+    const choice = pool[Math.floor(Math.random()*pool.length)].text;
+    lastThoughtText = choice;
+    return choice;
+  }
+  function scheduleNextThought(){
+    const decline = Math.max(0, Math.min(1, degradation));
+    const base = 42000 - decline*28000; // de ~42s a ~14s conforme empeora la memoria
+    const jitter = 8000 + Math.random()*14000;
+    setTimeout(()=>{
+      if(!anyPanelOpen()) showMonologue(pickThought());
+      scheduleNextThought();
+    }, base + jitter);
+  }
 
   // ---------- puerta: loop normal en fases 0-3, chequeo de Salida en disolución ----------
   function checkDoorProximity(){
@@ -2129,17 +2577,21 @@
             <textarea id="twtInput" maxlength="${maxLen}" rows="2" placeholder="¿qué está pasando?"></textarea>
             <div class="twt-compose-footer">
               <span class="twt-charcount" id="twtCharCount">0/${maxLen}</span>
-              <button class="twt-postbtn" id="twtPost">publicar</button>
+              <button class="twt-postbtn" id="twtPost" disabled>publicar</button>
             </div>
           </div>
         </div>
-        <p style="font-size:10.5px;color:#71767b;margin:8px 4px 0;">cuenta privada — nadie te sigue</p>
+        <p class="twt-hint">cuenta privada — nadie te sigue. escribe arriba y toca "publicar" para enviar.</p>
         <div class="twt-feed" id="twtFeed"></div>
       </div>
     `;
     const input = document.getElementById('twtInput');
     const counter = document.getElementById('twtCharCount');
-    input.addEventListener('input', ()=>{ counter.textContent = `${input.value.length}/${maxLen}`; });
+    const postBtn = document.getElementById('twtPost');
+    input.addEventListener('input', ()=>{
+      counter.textContent = `${input.value.length}/${maxLen}`;
+      postBtn.disabled = !input.value.trim();
+    });
 
     renderTwtFeed();
 
@@ -2153,6 +2605,7 @@
       SFX.notificacion();
       input.value = '';
       counter.textContent = `0/${maxLen}`;
+      postBtn.disabled = true;
       renderTwtFeed();
 
       const delay = 1400 + Math.random()*1800;
@@ -2380,14 +2833,17 @@
 
   function renderForo(){
     const visible = FORO_THREADS.filter(t => t.level <= Math.min(2, Math.floor(phaseIndex/1.3)));
-    pcContent.innerHTML = `<div class="foro-board"><div id="foroList"></div></div>`;
+    pcContent.innerHTML = `<div class="foro-board"><p class="foro-hint">toca un hilo para leer y responder</p><div id="foroList"></div></div>`;
     const list = document.getElementById('foroList');
     list.innerHTML = visible.map((t,i)=>`
       <div class="foro-thread-card" data-i="${i}">
-        <div class="fh">Anónimo No.${t.id} · ${fakeTimestamp(t.id)}</div>
-        <div class="ft">${escapeHtml(t.title)}</div>
-        <div class="fp">${renderPostBody(t.opResolved.split('\n')[0])}</div>
-        <div class="freplies">${t.replies.length} respuestas</div>
+        <div class="fcard-main">
+          <div class="fh">Anónimo No.${t.id} · ${fakeTimestamp(t.id)}</div>
+          <div class="ft">${escapeHtml(t.title)}</div>
+          <div class="fp">${renderPostBody(t.opResolved.split('\n')[0])}</div>
+          <div class="freplies">${t.replies.length} respuestas</div>
+        </div>
+        <span class="fchevron">→</span>
       </div>
     `).join('');
     list.querySelectorAll('.foro-thread-card').forEach(el=>{
@@ -2411,12 +2867,16 @@
         </div>
         <div class="foro-replies" id="foroReplies">${repliesHtml}</div>
         <div class="foro-comment-box" id="foroCommentBox">
+          <p class="foro-comment-hint">escribe tu respuesta y toca "publicar" para enviarla al hilo</p>
           <textarea id="foroInput" rows="2" maxlength="180" placeholder="comentar sobre tu vida..."></textarea>
-          <button id="foroComment">publicar</button>
+          <button id="foroComment" disabled>publicar</button>
         </div>
       </div>`;
     document.getElementById('foroBack').addEventListener('click', renderForo);
-    document.getElementById('foroComment').addEventListener('click', ()=>{
+    const foroInputEl = document.getElementById('foroInput');
+    const foroCommentBtn = document.getElementById('foroComment');
+    foroInputEl.addEventListener('input', ()=>{ foroCommentBtn.disabled = !foroInputEl.value.trim(); });
+    foroCommentBtn.addEventListener('click', ()=>{
       const val = document.getElementById('foroInput').value.trim();
       if(!val) return;
       forumCommented = true;
@@ -2759,6 +3219,9 @@
     const now = performance.now();
     const dt = Math.min((now-lastT)/1000, 0.05);
     lastT = now;
+
+    updateDoorGlow(dt);
+    updatePostItGlow(now);
 
     if(!anyPanelOpen()){
       camera.rotation.order = 'YXZ';
