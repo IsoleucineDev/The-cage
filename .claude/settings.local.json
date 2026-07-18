@@ -3,7 +3,24 @@
     "allow": [
       "Bash(python3 -c \"import sys,json;[print\\(p['url'],p['title'][:30]\\) for p in json.load\\(sys.stdin\\)]\")",
       "Bash(sed -i \"s/window.__qaJumpPhase\\(0\\)\\); }\\); }/window.__qaJumpPhase\\(0\\)\\); }\\);/\" qa_pills_reset.js)",
-      "Bash(sed -i \"s/await page.evaluate\\(\\(\\) => { advancePhase\\(\\); }\\);/await page.evaluate\\(\\(\\) => window.__qaAdvancePhase\\(\\)\\);/\" qa_pills_reset.js)"
+      "Bash(sed -i \"s/await page.evaluate\\(\\(\\) => { advancePhase\\(\\); }\\);/await page.evaluate\\(\\(\\) => window.__qaAdvancePhase\\(\\)\\);/\" qa_pills_reset.js)",
+      "Bash(grep -viE \"^[0-9]+:$\")",
+      "Bash(node *)",
+      "Bash(npm install *)",
+      "Bash(cp -r /home/isoleucine/Desktop/BIENAL_2026/Musica /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa/Musica)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 *)",
+      "Bash(git show *)",
+      "Read(//tmp/**)",
+      "Bash(mkdir -p /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa2)",
+      "Bash(cp /home/isoleucine/Desktop/BIENAL_2026/index.html /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa2/index.html)",
+      "Bash(cp -r /home/isoleucine/Desktop/BIENAL_2026/Musica /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa2/Musica)",
+      "Bash(mkdir -p /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa3)",
+      "Bash(cp /home/isoleucine/Desktop/BIENAL_2026/index.html /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa3/index.html)",
+      "Bash(cp -r /home/isoleucine/Desktop/BIENAL_2026/Musica /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa3/Musica)",
+      "Bash(mkdir -p /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa4)",
+      "Bash(cp /home/isoleucine/Desktop/BIENAL_2026/index.html /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa4/index.html)",
+      "Bash(cp -r /home/isoleucine/Desktop/BIENAL_2026/Musica /tmp/claude-1000/-home-isoleucine-Desktop-BIENAL-2026/9b44bf6a-45b4-4493-ae7e-1f6812816dee/scratchpad/qa4/Musica)"
     ]
   }
 }
